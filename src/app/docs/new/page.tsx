@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useCallback, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   MDXEditor,
   headingsPlugin,
@@ -32,10 +32,19 @@ import '@mdxeditor/editor/style.css';
 import { Upload, FileText } from 'lucide-react';
 
 export default function NewDocPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground/60" /></div>}>
+      <NewDocPageInner />
+    </Suspense>
+  );
+}
+
+function NewDocPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [title, setTitle] = useState('');
-  const [section, setSection] = useState('');
+  const [section, setSection] = useState(searchParams.get('section') || '');
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('# Новая страница\n\nНачните писать здесь...');
   const [saving, setSaving] = useState(false);

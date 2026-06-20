@@ -109,6 +109,7 @@ export default function DocsShell({
           onNavigate={handleNavigate}
           isOpen={mobileMenuOpen}
           onClose={() => setMobileMenuOpen(false)}
+          canEdit={canEdit}
         />
 
         {/* Content — golden section (1.618fr) */}
