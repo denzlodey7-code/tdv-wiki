@@ -113,7 +113,7 @@ export default function DocsShell({
         />
 
         {/* Content — golden section (1.618fr) */}
-        <main className="min-w-0">
+        <main className="min-w-0 flex flex-col">
           <div
             ref={contentRef}
             className="xl:mx-auto xl:max-w-[840px] px-6 xl:px-10 py-8 xl:py-12"
@@ -135,8 +135,8 @@ export default function DocsShell({
             {renderedContent}
           </div>
 
-          {/* Navigation — outside content padding, flush to main bottom */}
-          <div className="xl:mx-auto xl:max-w-[840px] px-6 xl:px-10 py-6 border-t border-border mt-8">
+          {/* Navigation — pushed to bottom of main via mt-auto */}
+          <div className="xl:mx-auto xl:max-w-[840px] px-6 xl:px-10 py-6 border-t border-border mt-auto">
             <div className="grid grid-cols-2 gap-4">
               {adjacent.prev ? (
                 <button
