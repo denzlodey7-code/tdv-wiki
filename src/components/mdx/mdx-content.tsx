@@ -1,6 +1,7 @@
 import React from 'react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import rehypeSlug from 'rehype-slug';
 import { CodeBlock, InlineCode, PlainCodeBlock, MermaidDiagram, Callout, Badge } from '@/components/mdx/mdx-components';
 
@@ -115,7 +116,7 @@ const mdxComponents = {
     return <PlainCodeBlock>{text}</PlainCodeBlock>;
   },
   blockquote: ({ children }: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote className="my-4 pl-4 border-l-2 border-border text-muted-foreground italic">
+    <blockquote className="my-4 pl-4 border-l-2 border-border text-muted-foreground not-italic [&_p]:mb-1 [&_p:last-child]:mb-0 [&_p]:leading-snug [&_p]:text-[14px]">
       {children}
     </blockquote>
   ),
@@ -143,7 +144,7 @@ interface MDXContentProps {
 export default function MDXContent({ source }: MDXContentProps) {
   return (
     <div className="docs-content max-w-none">
-      <MDXRemote source={source} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] } }} />
+      <MDXRemote source={source} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm, remarkBreaks], rehypePlugins: [rehypeSlug] } }} />
     </div>
   );
 }
