@@ -100,12 +100,17 @@ const mdxComponents = {
   // not inline code. We detect it here by checking if children is already
   // a CodeBlock/MermaidDiagram (has language) or if it's bare text.
   pre: ({ children }: React.HTMLAttributes<HTMLPreElement>) => {
-    // If children is already a React element (CodeBlock, MermaidDiagram, InlineCode),
-    // just pass it through — the code component already handled it.
     if (React.isValidElement(children)) {
+      // Language-less fenced code block: the code component rendered InlineCode,
+      // but inside <pre> it's a block-level element — upgrade to PlainCodeBlock.
+      if (children.type === InlineCode) {
+        const text = String(children.props.children).replace(/\n$/, '');
+        return <PlainCodeBlock>{text}</PlainCodeBlock>;
+      }
+      // CodeBlock or MermaidDiagram — just unwrap from the extra <pre>
       return <>{children}</>;
     }
-    // If children is a raw string (bare <pre>text</pre>), render as plain block
+    // Bare <pre>text</pre> — render as plain block
     const text = String(children).replace(/\n$/, '');
     return <PlainCodeBlock>{text}</PlainCodeBlock>;
   },

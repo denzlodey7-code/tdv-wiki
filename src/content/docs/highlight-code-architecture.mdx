@@ -15,7 +15,7 @@ slug: "highlight-code-architecture"
 
 Файл `skills/zai-ui-composer_sts/SKILL.md` описывает систему, которая через **intent detection** направляет запросы про код:
 
-```
+```text
 Intent: "code", "terminal", "IDE", "editor"
   → Скин: dark-zai или amber-retro
   → Компоненты: CodeBlock, syntax-*, cursor-blink
@@ -73,7 +73,7 @@ CSS-классы: `.c` (комментарии), `.k` (ключевые слов
 
 ## Архитектурная схема
 
-```
+```text
 zai-ui-composer_sts (оркестратор)
   ├── references/syntax.css        ← 3 темы (НЕ СУЩЕСТВУЕТ на диске)
   ├── references/effects.css       ← .prism-text, .neon-glow (НЕ СУЩЕСТВУЕТ)
