@@ -179,6 +179,12 @@ export default function EditDocPage() {
               className="hidden sm:block w-[240px] px-3 py-1.5 text-[13px] rounded-md border border-border bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             />
             <button
+              onClick={() => router.push(`/docs/${slug}`)}
+              className="px-3 py-1.5 text-[13px] font-medium rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
+            >
+              Отмена
+            </button>
+            <button
               onClick={() => setShowDeleteConfirm(true)}
               className="px-3 py-1.5 text-[13px] font-medium rounded-lg border border-red-500/40 text-red-500 hover:bg-red-500/10 transition-colors"
             >
