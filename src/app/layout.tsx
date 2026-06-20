@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/docs/theme-provider";
+import { SelectElementFAB, ElementDialog } from "@zai/select-element";
 import "./globals.css";
+import ClientSelectElementWrapper from "@/components/select-element-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +33,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           {children}
+          <ClientSelectElementWrapper />
         </ThemeProvider>
       </body>
     </html>

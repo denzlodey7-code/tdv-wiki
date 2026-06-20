@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  transpilePackages: ["@zai/select-element"],
   // Allow cross-domain requests from sandbox proxy (Z.ai preview panel)
   allowedDevOrigins: ["*"],
   // CI runners have ~7GB RAM; 4 default workers cause OOM during static generation.
