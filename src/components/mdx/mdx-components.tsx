@@ -40,7 +40,9 @@ export function CodeBlock({
     setMounted(true);
   }, []);
 
-  const isDark = resolvedTheme === 'dark';
+  const isDark = mounted ? resolvedTheme === 'dark' : false;
+  const codeBg = isDark ? '#1e1e2e' : '#fafafa';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
 
   const handleCopy = async () => {
     try {
@@ -60,21 +62,25 @@ export function CodeBlock({
     }
   };
 
-  const lineCount = children.trim().split('\n').length;
-
-  // Before mount: render a skeleton placeholder to avoid SSR/client mismatch.
-  // Using the same outer structure (header + body) prevents layout shift.
+  // Before mount: render a neutral placeholder to avoid SSR/client mismatch + theme flash.
+  // Always light-style placeholder — avoids dark→light flash on initial load.
   if (!mounted) {
     return (
-      <div className="my-4 rounded-lg overflow-hidden border border-border">
-        <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border">
-          <span className="text-xs text-muted-foreground font-mono">
+      <div
+        className="my-4 rounded-lg overflow-hidden"
+        style={{ border: `1px solid rgba(0,0,0,0.08)` }}
+      >
+        <div
+          className="flex items-center justify-between px-4 py-2 border-b"
+          style={{ background: '#f5f5f5', borderColor: 'rgba(0,0,0,0.08)' }}
+        >
+          <span className="text-xs text-gray-500 font-mono">
             {filename || language}
           </span>
         </div>
         <div
-          className="p-4 font-mono text-[13px] leading-relaxed"
-          style={{ background: '#1a1a1a' }}
+          className="p-4 font-mono text-[13px] leading-relaxed whitespace-pre overflow-x-auto"
+          style={{ background: '#fafafa', color: '#333' }}
         >
           {children.trim()}
         </div>
@@ -83,15 +89,21 @@ export function CodeBlock({
   }
 
   return (
-    <div className="my-4 rounded-lg overflow-hidden border border-border group relative">
+    <div
+      className="my-4 rounded-lg overflow-hidden group relative"
+      style={{ border: `1px solid ${borderColor}` }}
+    >
       {/* Header bar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border">
-        <span className="text-xs text-muted-foreground font-mono">
+      <div
+        className="flex items-center justify-between px-4 py-2 border-b"
+        style={{ background: isDark ? '#2a2a3a' : '#f0f0f0', borderColor: borderColor }}
+      >
+        <span className={`text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
           {filename || language}
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+          className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5' : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'}`}
           aria-label="Copy code"
         >
           {copied ? (
@@ -115,14 +127,22 @@ export function CodeBlock({
         customStyle={{
           margin: 0,
           borderRadius: 0,
-          background: isDark ? '#1a1a1a' : '#fafafa',
+          background: codeBg,
           fontSize: '13px',
           padding: '16px',
+          border: 'none',
         }}
         lineNumberStyle={{
           minWidth: '2.5em',
           paddingRight: '1em',
-          color: isDark ? '#555' : '#bbb',
+          color: isDark ? '#4a4a5a' : '#c0c0c0',
+          userSelect: 'none',
+          background: 'transparent',
+        }}
+        codeTagProps={{
+          style: {
+            fontFamily: 'var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+          },
         }}
       >
         {children.trim()}
@@ -159,14 +179,20 @@ export function PlainCodeBlock({ children }: { children: string }) {
     setMounted(true);
   }, []);
 
-  const isDark = resolvedTheme === 'dark';
+  const isDark = mounted ? resolvedTheme === 'dark' : false;
+  const codeBg = isDark ? '#1e1e2e' : '#fafafa';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
 
+  // Placeholder before mount — always light to avoid flash
   if (!mounted) {
     return (
-      <div className="my-4 rounded-lg overflow-hidden border border-border">
+      <div
+        className="my-4 rounded-lg overflow-hidden"
+        style={{ border: '1px solid rgba(0,0,0,0.08)' }}
+      >
         <div
           className="p-4 font-mono text-[13px] leading-relaxed overflow-x-auto whitespace-pre"
-          style={{ background: '#1a1a1a' }}
+          style={{ background: '#fafafa', color: '#333' }}
         >
           {children.trim()}
         </div>
@@ -175,11 +201,14 @@ export function PlainCodeBlock({ children }: { children: string }) {
   }
 
   return (
-    <div className="my-4 rounded-lg overflow-hidden border border-border">
+    <div
+      className="my-4 rounded-lg overflow-hidden"
+      style={{ border: `1px solid ${borderColor}` }}
+    >
       <div
         className="p-4 font-mono text-[13px] leading-relaxed overflow-x-auto whitespace-pre"
         style={{
-          background: isDark ? '#1a1a1a' : '#fafafa',
+          background: codeBg,
           color: isDark ? '#e5e5e5' : '#333',
         }}
       >
