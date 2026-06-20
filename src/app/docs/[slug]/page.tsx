@@ -15,9 +15,13 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// dynamicParams: false is required for static export (output: "export").
-// In server mode this is harmless — unknown slugs simply 404.
-export const dynamicParams = false;
+// dynamicParams: true allows newly created pages to render on-demand
+// without a full rebuild. For static export (GitHub Pages) this is ignored
+// because output: "export" generates all pages at build time anyway.
+export const dynamicParams = true;
+
+// Revalidate every 10s so new/updated pages appear without full rebuild
+export const revalidate = 10;
 
 export async function generateStaticParams() {
   const slugs = getAllSlugs();
