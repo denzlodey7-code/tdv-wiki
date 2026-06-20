@@ -17,7 +17,6 @@ interface PageProps {
 
 // Fully dynamic — no ISR cache, always reads fresh files from disk.
 // This ensures newly created pages are immediately accessible.
-// For GitHub Pages static export this flag is ignored (all pages built at deploy time).
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -47,7 +46,7 @@ export default async function DocPage({ params }: PageProps) {
   const adjacent = getAdjacentPages(slug);
   const headings = extractHeadings(doc.content);
   const section = doc.meta.section;
-  const canEdit = process.env.GITHUB_PAGES !== 'true';
+  const canEdit = process.env.CAN_EDIT !== 'false';
 
   // Pre-render MDX on the server — MDXRemote is an async Server Component
   // and cannot be used inside a Client Component ('use client').
