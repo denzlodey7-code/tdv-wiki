@@ -307,16 +307,16 @@ export function MermaidDiagram({ code }: { code: string }) {
           themeVariables: isDark
             ? {
                 background: '#0a0a0f',
-                primaryColor: '#15151f',
+                primaryColor: '#1e1e30',
                 primaryTextColor: '#E6E6E6',
-                primaryBorderColor: 'rgba(255,255,255,0.08)',
-                lineColor: 'rgba(125,211,252,0.3)',
+                primaryBorderColor: 'rgba(125,211,252,0.35)',
+                lineColor: 'rgba(125,211,252,0.5)',
                 secondaryColor: '#1a1a2a',
                 tertiaryColor: '#15151f',
                 fontFamily: 'system-ui, sans-serif',
                 fontSize: '13px',
-                nodeBorder: 'rgba(255,255,255,0.1)',
-                mainBkg: '#15151f',
+                nodeBorder: 'rgba(125,211,252,0.3)',
+                mainBkg: '#1e1e30',
                 clusterBkg: '#0d0d14',
               }
             : {

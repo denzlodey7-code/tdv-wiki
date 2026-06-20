@@ -54,26 +54,26 @@ export default function Sidebar({
             <div key={section.title} className="mb-1">
               <button
                 onClick={() => toggleSection(section.title)}
-                className={`flex items-center w-full px-2 py-1.5 text-[14px] font-medium rounded-md transition-colors ${
+                className={`flex items-center w-full px-2 py-1.5 text-[13px] font-medium rounded-md transition-colors text-left ${
                   isActive
                     ? 'text-foreground'
                     : 'text-muted-foreground'
                 } hover:text-foreground`}
               >
                 {isSectionOpen ? (
-                  <ChevronDown className="h-3.5 w-3.5 mr-1.5 shrink-0" />
+                  <ChevronDown className="h-3 w-3 mr-1.5 shrink-0" />
                 ) : (
-                  <ChevronRight className="h-3.5 w-3.5 mr-1.5 shrink-0" />
+                  <ChevronRight className="h-3 w-3 mr-1.5 shrink-0" />
                 )}
-                {section.title}
+                <span className="truncate">{section.title}</span>
               </button>
               {isSectionOpen && (
-                <div className="ml-1 mt-0.5 space-y-0.5">
+                <div className="ml-4 mt-0.5 space-y-0.5">
                   {section.items.map((item) => (
                     <button
                       key={item.slug}
                       onClick={() => handleNavigate(item.slug)}
-                      className={`block w-full text-left px-3 py-1.5 text-[14px] rounded-md transition-all ${
+                      className={`block w-full text-left px-2.5 py-1.5 text-[13px] rounded-md transition-all truncate ${
                         currentSlug === item.slug
                           ? 'bg-muted text-foreground font-medium'
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'

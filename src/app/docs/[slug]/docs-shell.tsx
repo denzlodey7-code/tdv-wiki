@@ -126,7 +126,7 @@ export default function DocsShell({
             </div>
 
             {/* Page Title */}
-            <h1 className="text-[36px] font-medium leading-tight text-foreground mb-2">
+            <h1 className="text-[32px] font-medium leading-tight text-foreground mb-4">
               {title}
             </h1>
 

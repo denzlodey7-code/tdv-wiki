@@ -13,10 +13,10 @@ export default function TOC({ headings, activeId }: TOCProps) {
 
   return (
     /* TOC — width controlled by docs-golden-grid (220px on xl+) */
-    <aside className="hidden xl:block shrink-0 h-[calc(100vh-49px)] sticky top-[49px]">
-      <nav className="py-4 pl-6">
-        <h4 className="text-[14px] font-medium text-muted-foreground mb-3 px-2">On this page</h4>
-        <ul className="space-y-1 border-l border-border">
+    <aside className="hidden xl:block shrink-0 h-[calc(100vh-49px)] sticky top-[49px] overflow-y-auto scrollbar-thin">
+      <nav className="py-8 px-4">
+        <h4 className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">On this page</h4>
+        <ul className="space-y-0.5 border-l border-border">
           {headings.map((heading, index) => (
             <li key={`${heading.id}-${index}`}>
               <a
@@ -29,7 +29,7 @@ export default function TOC({ headings, activeId }: TOCProps) {
                   }
                 }}
                 className={`block text-[13px] leading-snug py-1 transition-colors ${
-                  heading.level === 3 ? 'pl-8' : 'pl-4'
+                  heading.level === 3 ? 'pl-6' : 'pl-3'
                 } ${
                   activeId === heading.id
                     ? 'text-[var(--zai-color-accent)] font-medium border-l-2 border-[var(--zai-color-accent)] -ml-px'
