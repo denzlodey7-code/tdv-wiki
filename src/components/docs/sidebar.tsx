@@ -19,15 +19,7 @@ export default function Sidebar({
   isOpen,
   onClose,
 }: SidebarProps) {
-  const [openSections, setOpenSections] = React.useState<Set<string>>(() => {
-    const initial = new Set<string>();
-    for (const section of navigation) {
-      if (section.items.some((i) => i.slug === currentSlug)) {
-        initial.add(section.title);
-      }
-    }
-    return initial;
-  });
+  const [openSections, setOpenSections] = React.useState<Set<string>>(new Set());
 
   const toggleSection = (title: string) => {
     setOpenSections((prev) => {
