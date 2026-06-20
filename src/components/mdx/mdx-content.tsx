@@ -92,7 +92,15 @@ const mdxComponents = {
     // Fenced code blocks with syntax highlighting
     return <CodeBlock language={match[1]}>{codeString}</CodeBlock>;
   },
-  pre: ({ children }: React.HTMLAttributes<HTMLPreElement>) => <>{children}</>,
+  // Unwrap <pre> — the code component above handles rendering.
+  // If <pre> contains a <code> without a language class, render it as
+  // a plain code block (monospace, scrollable) rather than inline code.
+  pre: ({ children }: React.HTMLAttributes<HTMLPreElement>) => {
+    // Check if children is a code element without language
+    // react-syntax-highlighter CodeBlock already handles styled blocks,
+    // so this only catches bare <pre><code> blocks
+    return <>{children}</>;
+  },
   blockquote: ({ children }: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote className="my-4 pl-4 border-l-2 border-border text-muted-foreground italic">
       {children}

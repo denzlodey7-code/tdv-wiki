@@ -28,8 +28,16 @@ export function CodeBlock({
   showLineNumbers = true,
 }: CodeBlockProps) {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
-  const isDark = resolvedTheme === 'dark';
+
+  // Prevent flash: only render themed highlighter after mount
+  // On SSR, resolvedTheme is undefined → we'd get light theme every time
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? resolvedTheme === 'dark' : false;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(children.trim());
@@ -104,9 +112,15 @@ export function MermaidDiagram({ code }: { code: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     let cancelled = false;
     const renderDiagram = async () => {
       try {
