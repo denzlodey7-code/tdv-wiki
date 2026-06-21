@@ -24,8 +24,9 @@ export default function Sidebar({
   // Only the section containing the current page is open;
   // all others are collapsed by default.
   const findActiveSection = (slug: string) => {
+    if (!navigation?.length) return '';
     const sec = navigation.find((s) =>
-      s.pages.some((p) => p.slug === slug)
+      s.items.some((p) => p.slug === slug)
     );
     return sec ? sec.title : '';
   };
