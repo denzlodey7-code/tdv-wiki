@@ -4,7 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { SearchButton } from './search-dialog';
 import ThemeToggle from './theme-toggle';
-import { Menu, X, ExternalLink, Plus, Upload } from 'lucide-react';
+import { Menu, X, ExternalLink, Plus } from 'lucide-react';
+
+const WIKI_INDEX_SLUG = 'o-sts-wiki-index';
 
 interface HeaderProps {
   onSearchOpen: () => void;
@@ -21,6 +23,9 @@ export default function Header({
   currentSlug,
   canEdit = true,
 }: HeaderProps) {
+  const isWikiIndex = currentSlug === WIKI_INDEX_SLUG;
+  const activeTabStyle = 'px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full';
+  const inactiveTabStyle = 'px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors';
   return (
     <header className="sticky top-0 z-30 h-[49px] flex items-center border-b border-border bg-background">
       <div className="flex items-center w-full px-4">
@@ -74,15 +79,18 @@ export default function Header({
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 ml-4">
-            <button
-              className="px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors"
-              title="Текущая база знаний"
+            <Link
+              href={`/docs/${WIKI_INDEX_SLUG}/`}
+              className={isWikiIndex ? activeTabStyle : inactiveTabStyle}
             >
               О Sts Wiki
-            </button>
-            <span className="px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full">
+            </Link>
+            <Link
+              href="/docs/"
+              className={!isWikiIndex ? activeTabStyle : inactiveTabStyle}
+            >
               Docs
-            </span>
+            </Link>
           </nav>
         </div>
 
