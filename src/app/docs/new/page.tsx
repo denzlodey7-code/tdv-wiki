@@ -29,7 +29,7 @@ import {
   Separator,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
-import { Upload, FileText } from 'lucide-react';
+import { Upload, FileText, ArrowLeft } from 'lucide-react';
 
 export default function NewDocPage() {
   return (
@@ -180,9 +180,10 @@ function NewDocPageInner() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.back()}
-              className="text-[14px] text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1 text-[14px] text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← Назад
+              <ArrowLeft className="h-4 w-4" />
+              Назад
             </button>
             <span className="text-[14px] text-muted-foreground">|</span>
             <span className="text-[14px] font-medium text-foreground">

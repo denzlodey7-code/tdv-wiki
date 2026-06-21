@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import {
   MDXEditor,
   headingsPlugin,
@@ -162,9 +163,10 @@ export default function EditDocPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/docs/${slug}`)}
-              className="text-[14px] text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1 text-[14px] text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← Назад к странице
+              <ArrowLeft className="h-4 w-4" />
+              Назад к странице
             </button>
             <span className="text-[14px] text-muted-foreground">|</span>
             <span className="text-[14px] font-medium text-foreground">

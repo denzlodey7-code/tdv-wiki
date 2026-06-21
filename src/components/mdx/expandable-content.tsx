@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 /**
  * ExpandableContent — universal click-to-expand wrapper for docs-content.
@@ -121,9 +122,10 @@ export default function ExpandableContent({ children }: { children: React.ReactN
             <div className="sticky top-0 z-10 flex justify-end p-2 bg-background/80 backdrop-blur-sm border-b border-border">
               <button
                 onClick={close}
-                className="px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
-                ✕ Закрыть
+                <X className="h-3.5 w-3.5" />
+                Закрыть
               </button>
             </div>
             {/* Cloned content */}
