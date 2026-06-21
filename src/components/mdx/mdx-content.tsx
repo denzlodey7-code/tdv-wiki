@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
+import { visit } from 'unist-util-visit';
 import rehypeSlug from 'rehype-slug';
 import { CodeBlock, InlineCode, PlainCodeBlock, MermaidDiagram, Callout, Badge } from '@/components/mdx/mdx-components';
 import ExpandableContent from '@/components/mdx/expandable-content';
@@ -23,9 +24,24 @@ export default function MDXContent({ source }: MDXContentProps) {
 
   return (
     <ExpandableContent>
-      <MDXRemote source={source} components={components} options={{ mdxOptions: { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] } }} />
+      <MDXRemote source={source} components={components} options={{ mdxOptions: { remarkPlugins: [remarkGfm, remarkFencedCodeDefaultLang], rehypePlugins: [rehypeSlug] } }} />
     </ExpandableContent>
   );
+}
+
+/**
+ * Remark plugin: assigns lang='plain' to fenced code blocks that have no language.
+ * In the remark AST, fenced blocks are `code` nodes while inline code is `inlineCode`.
+ * This lets the rehype `code` component distinguish them via className='language-plain'.
+ */
+function remarkFencedCodeDefaultLang() {
+  return (tree: any) => {
+    visit(tree, 'code', (node: any) => {
+      if (!node.lang && !node.meta) {
+        node.lang = 'plain';
+      }
+    });
+  };
 }
 
 /**
@@ -99,17 +115,13 @@ function buildMdxComponents(validSlugs: string[]) {
       const match = /language-([\w+.-]+)/.exec(className || '');
       const codeString = String(children).replace(/\n$/, '');
 
-      // No language class
+      // No language class -> true inline code (single backtick in text)
       if (!match) {
-        // Multi-line content without language = fenced code block (```\n...\n```)
-        // Render directly as PlainCodeBlock because MDX may not wrap in <pre>
-        // when the code override returns a non-<code> element.
-        if (codeString.includes('\n')) {
-          return <PlainCodeBlock>{codeString}</PlainCodeBlock>;
-        }
-        // Single-line, no language = inline code (e.g. `const x = 1`)
         return <InlineCode>{children}</InlineCode>;
       }
+
+      // Plain code block (fenced block without language, tagged by remark plugin)
+      if (match[1] === 'plain') return <PlainCodeBlock>{codeString}</PlainCodeBlock>;
 
       // Mermaid diagrams
       if (match[1] === 'mermaid') return <MermaidDiagram code={codeString} />;
