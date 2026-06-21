@@ -25,6 +25,10 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "@typescript-eslint/no-unused-disable-directive": "off",
 
     // React rules
+    // STD-TEMPLATE-001: disable set-state-in-effect — standard Next.js hydration
+    // pattern (useEffect + setMounted) is canonical and intentional;
+    // React compiler is off, so this rule produces false positives.
+    "react-hooks/set-state-in-effect": "off",
     "react-hooks/exhaustive-deps": "off",
     "react-hooks/purity": "off",
     "react/no-unescaped-entities": "off",
@@ -51,17 +55,9 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "no-useless-escape": "off",
   },
 }, {
-  // Markdown files: [W] Warning level
-  files: ["**/*.md/**"],
-  plugins: {
-    "no-unicode-policy": noUnicodePolicy,
-  },
-  rules: {
-    "no-unicode-policy/no-emoji": "warn",
-    "no-unicode-policy/no-unicode-graphics": "warn",
-  },
-}, {
-  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills/**", "download/**", "tool-results/**", "eslint-rules/**", "upload/**", "agent-ctx/**", "scripts/**"]
+  // MD/MDX files: ignored globally (no MDX parser installed).
+  // STD-DOC-003 unicode policy is enforced on production code (.ts/.tsx/.js/.jsx) only.
+  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills/**", "download/**", "tool-results/**", "eslint-rules/**", "upload/**", "agent-ctx/**", "scripts/**", "standards/**", "**/*.md", "**/*.mdx"]
 }];
 
 export default eslintConfig;

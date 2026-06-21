@@ -4,6 +4,74 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Plus, Trash2, FolderPlus, ArrowUp, ArrowDown } from 'lucide-react';
 import type { NavSection } from '@/lib/mdx-utils';
 
+// --- Slug generation (extracted to eliminate 3x duplication) ---
+
+const CYRILLIC_MAP: Record<string, string> = {
+  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
+  'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+  'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+  'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+};
+
+function slugifySectionName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\sа-яА-ЯёЁ-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .replace(/[а-яА-ЯёЁ]/g, (c) => CYRILLIC_MAP[c.toLowerCase()] || c)
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') + '-index';
+}
+
+async function createSectionDoc(
+  title: string,
+  sectionOrder: number,
+  slug: string,
+) {
+  const res = await fetch('/api/docs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title,
+      section: title,
+      sectionOrder,
+      order: 0,
+      slug,
+      content: `# ${title}\n\n`,
+    }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || 'Create failed');
+  }
+  return res.json();
+}
+
+async function reorderExistingSections(
+  allSections: Record<string, number>,
+  newSectionTitle: string,
+) {
+  const reorderSections: Record<string, number> = {};
+  for (const [key, val] of Object.entries(allSections)) {
+    if (key !== newSectionTitle) {
+      reorderSections[key] = val;
+    }
+  }
+  const res = await fetch('/api/docs/reorder-section', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sections: reorderSections }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || 'Reorder failed');
+  }
+}
+
 interface SidebarProps {
   currentSlug: string;
   navigation: NavSection[];
@@ -122,9 +190,14 @@ export default function Sidebar({
   const handleCreateNewSection = useCallback(async () => {
     if (!newSectionName.trim()) return;
     setCreating(true);
+    const title = newSectionName.trim();
+    const slug = slugifySectionName(title);
     try {
       // Calculate sectionOrder based on position
       let sectionOrder: number;
+      let needsRenumber = false;
+      let renumberedSections: Record<string, number> = {};
+
       if (newSectionPosition === 'end' || !newSectionRef) {
         const maxOrder = navigation.reduce((max, s) => Math.max(max, s.order), 0);
         sectionOrder = maxOrder + 100;
@@ -132,197 +205,40 @@ export default function Sidebar({
         const refIdx = navigation.findIndex((s) => s.title === newSectionRef);
         if (refIdx < 0) {
           sectionOrder = navigation.length * 100;
-        } else if (newSectionPosition === 'before') {
-          // Insert before ref: take ref's order and shift ref down
-          const refOrder = navigation[refIdx].order;
-          const prevOrder = refIdx > 0 ? navigation[refIdx - 1].order : 0;
-          sectionOrder = Math.round((refOrder + prevOrder) / 2);
-          // If too close (integer collision), renumber all sections
-          if (sectionOrder === refOrder || sectionOrder === prevOrder) {
-            // Need to renumber — assign space and shift everything after
-            const newSections: Record<string, number> = {};
-            let counter = 100;
-            for (let i = 0; i < navigation.length; i++) {
-              if (i === refIdx) {
-                // This is where the new section goes
-                newSections[newSectionName.trim()] = counter;
-                counter += 100;
-              }
-              newSections[navigation[i].title] = counter;
-              counter += 100;
-            }
-            // Create the new doc first, then reorder
-            const slug = newSectionName
-              .toLowerCase()
-              .replace(/[^\w\sа-яА-ЯёЁ-]/g, '')
-              .replace(/\s+/g, '-')
-              .replace(/-+/g, '-')
-              .replace(/^-|-$/g, '')
-              .replace(/[а-яА-ЯёЁ]/g, (c) => {
-                const map: Record<string, string> = {
-                  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-                  'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-                  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-                  'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-                  'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-                };
-                return map[c.toLowerCase()] || c;
-              })
-              .replace(/[^a-z0-9-]/g, '')
-              .replace(/-+/g, '-')
-              .replace(/^-|-$/g, '') + '-index';
-
-            const res = await fetch('/api/docs', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                title: newSectionName.trim(),
-                section: newSectionName.trim(),
-                sectionOrder: newSections[newSectionName.trim()],
-                order: 0,
-                slug,
-                content: `# ${newSectionName.trim()}\n\n`,
-              }),
-            });
-
-            if (!res.ok) {
-              const data = await res.json();
-              throw new Error(data.error || 'Create failed');
-            }
-
-            // Now reorder existing sections (exclude new one since it's already created)
-            const reorderSections: Record<string, number> = {};
-            for (const [key, val] of Object.entries(newSections)) {
-              if (key !== newSectionName.trim()) {
-                reorderSections[key] = val;
-              }
-            }
-
-            await fetch('/api/docs/reorder-section', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ sections: reorderSections }),
-            });
-
-            window.location.href = `/docs/${slug}/`;
-            return;
-          }
         } else {
-          // Insert after ref
           const refOrder = navigation[refIdx].order;
-          const nextOrder = refIdx < navigation.length - 1 ? navigation[refIdx + 1].order : refOrder + 200;
-          sectionOrder = Math.round((refOrder + nextOrder) / 2);
-          // Collision check
-          if (sectionOrder === refOrder || sectionOrder === nextOrder) {
-            const newSections: Record<string, number> = {};
+          const neighborOrder = newSectionPosition === 'before'
+            ? (refIdx > 0 ? navigation[refIdx - 1].order : 0)
+            : (refIdx < navigation.length - 1 ? navigation[refIdx + 1].order : refOrder + 200);
+          sectionOrder = Math.round((refOrder + neighborOrder) / 2);
+
+          // Collision: renumber all sections with 100-step spacing
+          if (sectionOrder === refOrder || sectionOrder === neighborOrder) {
+            needsRenumber = true;
             let counter = 100;
             for (let i = 0; i < navigation.length; i++) {
-              newSections[navigation[i].title] = counter;
+              renumberedSections[navigation[i].title] = counter;
               counter += 100;
-              if (i === refIdx) {
-                // Insert new section after this one
-                newSections[newSectionName.trim()] = counter;
+              if (newSectionPosition === 'before' && i === refIdx) {
+                renumberedSections[title] = counter;
+                counter += 100;
+              } else if (newSectionPosition === 'after' && i === refIdx) {
+                renumberedSections[title] = counter;
                 counter += 100;
               }
             }
-            const slug = newSectionName
-              .toLowerCase()
-              .replace(/[^\w\sа-яА-ЯёЁ-]/g, '')
-              .replace(/\s+/g, '-')
-              .replace(/-+/g, '-')
-              .replace(/^-|-$/g, '')
-              .replace(/[а-яА-ЯёЁ]/g, (c) => {
-                const map: Record<string, string> = {
-                  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-                  'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-                  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-                  'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-                  'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-                };
-                return map[c.toLowerCase()] || c;
-              })
-              .replace(/[^a-z0-9-]/g, '')
-              .replace(/-+/g, '-')
-              .replace(/^-|-$/g, '') + '-index';
-
-            const res = await fetch('/api/docs', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                title: newSectionName.trim(),
-                section: newSectionName.trim(),
-                sectionOrder: newSections[newSectionName.trim()],
-                order: 0,
-                slug,
-                content: `# ${newSectionName.trim()}\n\n`,
-              }),
-            });
-
-            if (!res.ok) {
-              const data = await res.json();
-              throw new Error(data.error || 'Create failed');
-            }
-
-            const reorderSections: Record<string, number> = {};
-            for (const [key, val] of Object.entries(newSections)) {
-              if (key !== newSectionName.trim()) {
-                reorderSections[key] = val;
-              }
-            }
-
-            await fetch('/api/docs/reorder-section', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ sections: reorderSections }),
-            });
-
-            window.location.href = `/docs/${slug}/`;
-            return;
+            sectionOrder = renumberedSections[title];
           }
         }
       }
 
-      // Simple case — no collision, just create with calculated order
-      const slug = newSectionName
-        .toLowerCase()
-        .replace(/[^\w\sа-яА-ЯёЁ-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '')
-        .replace(/[а-яА-ЯёЁ]/g, (c) => {
-          const map: Record<string, string> = {
-            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-            'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-            'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-            'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-            'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-          };
-          return map[c.toLowerCase()] || c;
-        })
-        .replace(/[^a-z0-9-]/g, '')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '') + '-index';
+      await createSectionDoc(title, sectionOrder, slug);
 
-      const res = await fetch('/api/docs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: newSectionName.trim(),
-          section: newSectionName.trim(),
-          sectionOrder,
-          order: 0,
-          slug,
-          content: `# ${newSectionName.trim()}\n\n`,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Create failed');
+      if (needsRenumber) {
+        await reorderExistingSections(renumberedSections, title);
       }
 
-      const data = await res.json();
-      window.location.href = `/docs/${data.slug}/`;
+      window.location.href = `/docs/${slug}/`;
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Ошибка создания секции');
     } finally {
