@@ -20,12 +20,13 @@ export default function SearchDialog({
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Flatten all pages for search
+  // Flatten all pages for search (include snippet for content search)
   const allPages = navigation.flatMap((section) =>
     section.items.map((item) => ({
       slug: item.slug,
       title: item.title,
       section: section.title,
+      snippet: item.snippet || '',
     }))
   );
 
@@ -35,7 +36,8 @@ export default function SearchDialog({
         return (
           page.title.toLowerCase().includes(q) ||
           page.section.toLowerCase().includes(q) ||
-          page.slug.toLowerCase().includes(q)
+          page.slug.toLowerCase().includes(q) ||
+          page.snippet.toLowerCase().includes(q)
         );
       })
     : allPages;
@@ -107,7 +109,7 @@ export default function SearchDialog({
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="Search documentation..."
-            className="flex-1 bg-transparent px-3 py-3.5 text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
+            className="flex-1 bg-transparent px-3 py-3.5 text-[var(--text-md)] text-foreground outline-none placeholder:text-muted-foreground"
           />
           <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-muted text-[11px] text-muted-foreground">
             ESC
@@ -131,7 +133,7 @@ export default function SearchDialog({
                 }`}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="text-[14px] text-foreground truncate">
+                  <div className="text-[var(--text-base)] text-foreground truncate">
                     {page.title}
                   </div>
                   <div className="text-[12px] text-muted-foreground truncate">
@@ -171,7 +173,7 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
       className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
     >
       <Search className="h-3.5 w-3.5" />
-      <span className="text-[13px]">Search</span>
+      <span className="text-[var(--text-sm)]">Search</span>
       <kbd className="hidden sm:flex items-center gap-0.5 text-[11px] text-muted-foreground ml-2">
         <Command className="h-3 w-3" />K
       </kbd>

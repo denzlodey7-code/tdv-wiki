@@ -19,7 +19,7 @@ import { X } from 'lucide-react';
 
 /** CSS selectors for expandable block types */
 const EXPANDABLE_SELECTOR = [
-  'div.my-4',                          // CodeBlock, PlainCodeBlock, MermaidDiagram, Callout
+  '[data-expandable]',                 // CodeBlock, PlainCodeBlock (explicit marker)
   'div.overflow-x-auto',               // table overflow wrappers
   'img.max-w-full',                    // images
 ].join(', ');

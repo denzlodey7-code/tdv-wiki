@@ -3,29 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Plus, Trash2, FolderPlus, ArrowUp, ArrowDown } from 'lucide-react';
 import type { NavSection } from '@/lib/mdx-utils';
-
-// --- Slug generation (extracted to eliminate 3x duplication) ---
-
-const CYRILLIC_MAP: Record<string, string> = {
-  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-  'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-  'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-  'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-};
-
-function slugifySectionName(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^\w\sа-яА-ЯёЁ-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .replace(/[а-яА-ЯёЁ]/g, (c) => CYRILLIC_MAP[c.toLowerCase()] || c)
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '') + '-index';
-}
+import { slugifySectionName } from '@/lib/slugify';
 
 async function createSectionDoc(
   title: string,
@@ -288,7 +266,7 @@ export default function Sidebar({
               <div className="flex items-center">
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className={`flex items-center flex-1 min-w-0 px-2 py-1.5 text-[13px] font-medium rounded-md transition-colors text-left ${
+                  className={`flex items-center flex-1 min-w-0 px-2 py-1.5 text-[var(--text-sm)] font-medium rounded-md transition-colors text-left ${
                     isActive
                       ? 'text-foreground'
                       : 'text-muted-foreground'
@@ -338,7 +316,7 @@ export default function Sidebar({
                     >
                       <button
                         onClick={() => handleNavigate(item.slug)}
-                        className={`flex-1 min-w-0 text-left px-2.5 py-1.5 text-[13px] rounded-md transition-all break-words ${
+                        className={`flex-1 min-w-0 text-left px-2.5 py-1.5 text-[var(--text-sm)] rounded-md transition-all break-words ${
                           currentSlug === item.slug
                             ? 'bg-muted text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -373,7 +351,7 @@ export default function Sidebar({
                 setNewSectionRef(navigation[navigation.length - 1]?.title || '');
                 setShowNewSection(true);
               }}
-              className="flex items-center gap-2 w-full px-2 py-1.5 text-[13px] text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/50 transition-colors"
+              className="flex items-center gap-2 w-full px-2 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/50 transition-colors"
             >
               <FolderPlus className="h-3.5 w-3.5" />
               <span>Новая секция</span>
@@ -396,14 +374,14 @@ export default function Sidebar({
               <button
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className="px-4 py-2 text-[13px] rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
+                className="px-4 py-2 text-[var(--text-sm)] rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
               >
                 Отмена
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 disabled={deleting}
-                className="px-4 py-2 text-[13px] font-medium rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-[var(--text-sm)] font-medium rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
               >
                 {deleting ? 'Удаление...' : 'Удалить'}
               </button>
@@ -422,7 +400,7 @@ export default function Sidebar({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[12px] text-muted-foreground mb-1.5">
+                <label className="block text-[var(--text-xs)] text-muted-foreground mb-1.5">
                   Название секции
                 </label>
                 <input
@@ -439,7 +417,7 @@ export default function Sidebar({
               </div>
 
               <div>
-                <label className="block text-[12px] text-muted-foreground mb-1.5">
+                <label className="block text-[var(--text-xs)] text-muted-foreground mb-1.5">
                   Позиция
                 </label>
                 <div className="space-y-2">
@@ -491,7 +469,7 @@ export default function Sidebar({
 
               {(newSectionPosition === 'before' || newSectionPosition === 'after') && navigation.length > 0 && (
                 <div>
-                  <label className="block text-[12px] text-muted-foreground mb-1.5">
+                  <label className="block text-[var(--text-xs)] text-muted-foreground mb-1.5">
                     {newSectionPosition === 'before' ? 'Перед какой секцией' : 'После какой секции'}
                   </label>
                   <select
@@ -518,14 +496,14 @@ export default function Sidebar({
                   setNewSectionRef('');
                 }}
                 disabled={creating}
-                className="px-4 py-2 text-[13px] rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
+                className="px-4 py-2 text-[var(--text-sm)] rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
               >
                 Отмена
               </button>
               <button
                 onClick={handleCreateNewSection}
                 disabled={creating || !newSectionName.trim()}
-                className="px-4 py-2 text-[13px] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-[var(--text-sm)] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-50"
               >
                 {creating ? 'Создание...' : 'Создать'}
               </button>

@@ -15,7 +15,7 @@ export default function TOC({ headings, activeId }: TOCProps) {
     /* TOC — width controlled by docs-golden-grid (220px on xl+) */
     <aside className="hidden xl:block shrink-0 h-[calc(100vh-49px)] sticky top-[49px] overflow-y-auto scrollbar-thin">
       <nav className="py-8 px-4">
-        <h4 className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">На этой странице</h4>
+        <h4 className="text-[var(--text-sm)] font-semibold text-muted-foreground uppercase tracking-wider mb-3">На этой странице</h4>
         <ul className="space-y-0.5 border-l border-border">
           {headings.map((heading, index) => (
             <li key={`${heading.id}-${index}`}>
@@ -28,7 +28,7 @@ export default function TOC({ headings, activeId }: TOCProps) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className={`block text-[13px] leading-snug py-1 transition-colors ${
+                className={`block text-[var(--text-sm)] leading-snug py-1 transition-colors ${
                   heading.level === 3 ? 'pl-6' : 'pl-3'
                 } ${
                   activeId === heading.id

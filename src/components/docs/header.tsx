@@ -73,7 +73,7 @@ export default function Header({
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-[15px] font-semibold text-foreground">
+            <span className="text-[var(--text-md)] font-semibold text-foreground">
               StsDev Wiki
             </span>
           </Link>
@@ -100,7 +100,7 @@ export default function Header({
           {canEdit && (
             <Link
               href="/docs/new/"
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
               title="Create page"
             >
               <Plus className="h-4 w-4" />
@@ -112,7 +112,7 @@ export default function Header({
           {canEdit && currentSlug && (
             <Link
               href={`/docs/${currentSlug}/edit/`}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+              className="flex items-center gap-1 px-2.5 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
               title="Edit this page"
             >
               <svg
@@ -139,7 +139,7 @@ export default function Header({
             href="https://github.com/stsgs1980/StsDev-Wiki-Template"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-[var(--text-sm)] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors"
           >
             GitHub
             <ExternalLink className="h-3 w-3" />

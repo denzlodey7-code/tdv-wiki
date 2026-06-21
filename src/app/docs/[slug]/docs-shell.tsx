@@ -7,7 +7,7 @@ import Header from '@/components/docs/header';
 import Sidebar from '@/components/docs/sidebar';
 import TOC from '@/components/docs/toc';
 import SearchDialog from '@/components/docs/search-dialog';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUp } from 'lucide-react';
 import type { NavSection, Heading } from '@/lib/mdx-utils';
 
 const WIKI_SECTION = 'О Sts Wiki';
@@ -42,6 +42,7 @@ export default function DocsShell({
   const [activeHeading, setActiveHeading] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleNavigate = useCallback(
@@ -98,6 +99,13 @@ export default function DocsShell({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Scroll-to-top visibility
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header
@@ -131,14 +139,14 @@ export default function DocsShell({
             style={{ gap: 'var(--fib-3)' }}
           >
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-[13px] text-foreground/60 mb-6">
+            <div className="flex items-center gap-2 text-[var(--text-sm)] text-foreground/60 mb-6">
               <Link href="/docs/" className="hover:text-foreground transition-colors">Docs</Link>
               <span>/</span>
               <span>{section}</span>
             </div>
 
             {/* Page Title */}
-            <h1 className="text-[32px] font-medium leading-tight text-foreground mb-4">
+            <h1 className="text-[var(--text-3xl)] font-medium leading-tight text-foreground mb-4">
               {title}
             </h1>
 
@@ -156,10 +164,10 @@ export default function DocsShell({
                 >
                   <ChevronLeft className="h-4 w-4 mt-0.5 text-muted-foreground group-hover:text-foreground shrink-0" />
                   <div>
-                    <div className="text-[12px] text-muted-foreground mb-1">
+                    <div className="text-[var(--text-xs)] text-muted-foreground mb-1">
                       Назад
                     </div>
-                    <div className="text-[14px] text-foreground/80 group-hover:text-foreground">
+                    <div className="text-[var(--text-base)] text-foreground/80 group-hover:text-foreground">
                       {adjacent.prev.title}
                     </div>
                   </div>
@@ -173,10 +181,10 @@ export default function DocsShell({
                   className="group flex items-start gap-2 p-4 rounded-lg border border-border hover:border-ring transition-colors text-left justify-end hover:bg-muted/50"
                 >
                   <div className="text-right">
-                    <div className="text-[12px] text-muted-foreground mb-1">
+                    <div className="text-[var(--text-xs)] text-muted-foreground mb-1">
                       Далее
                     </div>
-                    <div className="text-[14px] text-foreground/80 group-hover:text-foreground">
+                    <div className="text-[var(--text-base)] text-foreground/80 group-hover:text-foreground">
                       {adjacent.next.title}
                     </div>
                   </div>
@@ -199,6 +207,17 @@ export default function DocsShell({
         onNavigate={handleNavigate}
         navigation={filteredNav}
       />
+
+      {/* Scroll to top */}
+      {showScrollTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-muted border border-border text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors shadow-lg"
+          aria-label="Наверх"
+        >
+          <ArrowUp className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }

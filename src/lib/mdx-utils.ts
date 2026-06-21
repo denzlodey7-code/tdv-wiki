@@ -26,7 +26,7 @@ export interface DocPage {
 export interface NavSection {
   title: string;
   order: number;
-  items: { slug: string; title: string; order: number }[];
+  items: { slug: string; title: string; order: number; snippet?: string }[];
 }
 
 export interface Heading {
@@ -72,22 +72,38 @@ export function getAllDocs(): DocPage[] {
 }
 
 /**
+ * Extract plain-text snippet from MDX content (strip markdown, first 200 chars)
+ */
+function extractSnippet(content: string): string {
+  return content
+    .replace(/^---[\s\S]*?---/, '')
+    .replace(/#{1,6}\s+.+/g, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/^[>\-\*|]\s?/gm, '')
+    .replace(/\n+/g, ' ')
+    .trim()
+    .slice(0, 200);
+}
+
+/**
  * Generate navigation structure from frontmatter data
  * Groups pages by section, sorts by order within each section
  */
 export function getNavigation(): NavSection[] {
   const docs = getAllDocs();
-  
+
   // Group by section
-  const sectionMap = new Map<string, DocMeta[]>();
+  const sectionMap = new Map<string, { meta: DocMeta; snippet: string }[]>();
   const sectionOrderMap = new Map<string, number>();
   for (const doc of docs) {
     const section = doc.meta.section;
     if (!sectionMap.has(section)) {
       sectionMap.set(section, []);
     }
-    sectionMap.get(section)!.push(doc.meta);
-    // Track the lowest sectionOrder for each section (first doc defines it)
+    sectionMap.get(section)!.push({ meta: doc.meta, snippet: extractSnippet(doc.content) });
     if (!sectionOrderMap.has(section) || doc.meta.sectionOrder < sectionOrderMap.get(section)!) {
       sectionOrderMap.set(section, doc.meta.sectionOrder);
     }
@@ -99,14 +115,15 @@ export function getNavigation(): NavSection[] {
   );
 
   const navSections: NavSection[] = sortedSections.map(([sectionTitle, items]) => {
-    items.sort((a, b) => a.order - b.order);
+    items.sort((a, b) => a.meta.order - b.meta.order);
     return {
       title: sectionTitle,
       order: sectionOrderMap.get(sectionTitle) ?? 0,
       items: items.map((item) => ({
-        slug: item.slug,
-        title: item.title,
-        order: item.order,
+        slug: item.meta.slug,
+        title: item.meta.title,
+        order: item.meta.order,
+        snippet: item.snippet,
       })),
     };
   });

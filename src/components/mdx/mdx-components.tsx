@@ -156,6 +156,7 @@ export function CodeBlock({
     <div
       className="my-4 rounded-lg overflow-hidden"
       style={{ border: `1px solid ${borderColor}` }}
+      data-expandable
     >
       {headerBar}
       <SyntaxHighlighter {...highlighterProps}>
@@ -240,6 +241,7 @@ export function PlainCodeBlock({ children }: { children: string }) {
       <div
         className="my-4 rounded-lg overflow-hidden"
         style={{ border: '1px solid var(--code-border)' }}
+        data-expandable
       >
         <div
           className="flex items-center justify-between px-4 py-2.5 border-b"
@@ -265,6 +267,7 @@ export function PlainCodeBlock({ children }: { children: string }) {
     <div
       className="my-4 rounded-lg overflow-hidden"
       style={{ border: `1px solid ${borderColor}` }}
+      data-expandable
     >
       <div
         className="flex items-center justify-between px-4 py-2.5 border-b"

@@ -3,10 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   transpilePackages: ['@zai/select-element'],
   trailingSlash: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  reactStrictMode: false,
+  reactStrictMode: true,
   
   // Allow cross-domain requests from sandbox proxy (Z.ai preview panel)
   allowedDevOrigins: ["*"],
