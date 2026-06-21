@@ -38,7 +38,7 @@ export default function Header({
             )}
           </button>
 
-          <Link href="/docs/approaches-overview/" className="flex items-center gap-2">
+          <Link href="/docs/" className="flex items-center gap-2">
             <svg
               width="24"
               height="24"
@@ -74,6 +74,12 @@ export default function Header({
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 ml-4">
+            <button
+              className="px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors"
+              title="Текущая база знаний"
+            >
+              О Sts Wiki
+            </button>
             <span className="px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full">
               Docs
             </span>
@@ -122,7 +128,9 @@ export default function Header({
           <SearchButton onClick={onSearchOpen} />
 
           <a
-            href="#"
+            href="https://github.com/stsgs1980/StsDev-Wiki-Template"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors"
           >
             GitHub

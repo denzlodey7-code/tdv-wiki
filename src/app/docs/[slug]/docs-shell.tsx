@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/docs/header';
 import Sidebar from '@/components/docs/sidebar';
 import TOC from '@/components/docs/toc';
@@ -121,7 +122,7 @@ export default function DocsShell({
           >
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-[13px] text-foreground/60 mb-6">
-              <span>Docs</span>
+              <Link href="/docs/" className="hover:text-foreground transition-colors">Docs</Link>
               <span>/</span>
               <span>{section}</span>
             </div>
@@ -146,7 +147,7 @@ export default function DocsShell({
                   <ChevronLeft className="h-4 w-4 mt-0.5 text-muted-foreground group-hover:text-foreground shrink-0" />
                   <div>
                     <div className="text-[12px] text-muted-foreground mb-1">
-                      Previous
+                      Назад
                     </div>
                     <div className="text-[14px] text-foreground/80 group-hover:text-foreground">
                       {adjacent.prev.title}
@@ -163,7 +164,7 @@ export default function DocsShell({
                 >
                   <div className="text-right">
                     <div className="text-[12px] text-muted-foreground mb-1">
-                      Next
+                      Далее
                     </div>
                     <div className="text-[14px] text-foreground/80 group-hover:text-foreground">
                       {adjacent.next.title}

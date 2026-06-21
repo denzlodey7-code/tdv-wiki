@@ -85,8 +85,7 @@ export default function EditDocPage() {
         const data = await res.json();
         throw new Error(data.error || 'Delete failed');
       }
-      router.push('/docs/approaches-overview/');
-      router.refresh();
+      router.push('/docs/');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Ошибка удаления');
       setShowDeleteConfirm(false);

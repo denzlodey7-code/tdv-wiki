@@ -149,6 +149,16 @@
   --fib-6: 6.5rem;    /* 104px */
   --fib-7: 10.5rem;   /* 168px */
 
+  /* Type scale (px-based, aligned with Fibonacci spacing) */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 30px;
+  --text-3xl: 32px;
+
   /* Grid gap tokens */
   --zai-gap-xs: 0.75rem;   /* 12px — tight, inside cards */
   --zai-gap-sm: 1.5rem;    /* 24px — standard grid */

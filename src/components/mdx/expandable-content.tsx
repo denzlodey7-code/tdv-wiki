@@ -12,7 +12,8 @@ import { X } from 'lucide-react';
  * How it works:
  * - Event delegation on the wrapper div
  * - On click, finds the closest "expandable block" ancestor
- * - Clones it into a fixed fullscreen overlay
+ * - Clones it into a fixed fullscreen overlay via React portal (not dangerouslySetInnerHTML)
+ * - Event delegation on overlay re-wires Copy buttons and TOC links
  * - Click outside or press Escape to close
  */
 
@@ -22,6 +23,21 @@ const EXPANDABLE_SELECTOR = [
   'div.overflow-x-auto',               // table overflow wrappers
   'img.max-w-full',                    // images
 ].join(', ');
+
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text.trim());
+    return true;
+  } catch {
+    const textarea = document.createElement('textarea');
+    textarea.value = text.trim();
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return true;
+  }
+}
 
 export default function ExpandableContent({ children }: { children: React.ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -63,6 +79,65 @@ export default function ExpandableContent({ children }: { children: React.ReactN
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
+  }, [expanded]);
+
+  // Wire Copy buttons and TOC links inside overlay via event delegation
+  useEffect(() => {
+    if (!expanded || !overlayRef.current) return;
+
+    const overlay = overlayRef.current;
+
+    const handleOverlayClick = async (e: Event) => {
+      const target = e.target as HTMLElement;
+
+      // Copy button — find the closest [aria-label="Copy code"]
+      const copyBtn = target.closest('[aria-label="Copy code"]') as HTMLElement | null;
+      if (copyBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Find the code content: sibling container with pre/code or whitespace-pre div
+        const codeContainer = copyBtn.closest('.rounded-lg');
+        const codeEl = codeContainer?.querySelector(
+          'pre code, pre, div[style*="white-space: pre"], div.whitespace-pre'
+        ) as HTMLElement | null;
+        const text = codeEl?.textContent || '';
+
+        await copyTextToClipboard(text);
+
+        // Visual feedback: swap icon text to "Copied"
+        const spanEl = copyBtn.querySelector('span');
+        if (spanEl) {
+          const original = spanEl.textContent;
+          spanEl.textContent = 'Copied';
+          spanEl.style.color = '#22c55e';
+          setTimeout(() => {
+            spanEl.textContent = original;
+            spanEl.style.color = '';
+          }, 2000);
+        }
+        return;
+      }
+
+      // TOC anchor links inside overlay
+      const anchor = target.closest('a[href^="#"]') as HTMLElement | null;
+      if (anchor) {
+        e.preventDefault();
+        e.stopPropagation();
+        // In overlay, scroll to the target element within the overlay
+        const href = (anchor as HTMLAnchorElement).getAttribute('href');
+        if (href) {
+          const targetEl = overlay.querySelector(href);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+        return;
+      }
+    };
+
+    overlay.addEventListener('click', handleOverlayClick);
+    return () => overlay.removeEventListener('click', handleOverlayClick);
   }, [expanded]);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
@@ -109,12 +184,12 @@ export default function ExpandableContent({ children }: { children: React.ReactN
       {/* Fullscreen overlay */}
       {expanded && (
         <div
-          ref={overlayRef}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
           onClick={close}
         >
           <div
+            ref={overlayRef}
             className="bg-background rounded-lg border border-border overflow-auto max-w-[95vw] max-h-[92vh] w-full"
             onClick={(e) => e.stopPropagation()}
           >
@@ -131,9 +206,9 @@ export default function ExpandableContent({ children }: { children: React.ReactN
             {/* Cloned content */}
             <div
               className="p-6"
-              style={{ fontSize: '15px' }}
-              dangerouslySetInnerHTML={{ __html: expandedHtml }}
-            />
+            >
+              <div dangerouslySetInnerHTML={{ __html: expandedHtml }} />
+            </div>
           </div>
         </div>
       )}

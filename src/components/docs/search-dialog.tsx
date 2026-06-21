@@ -116,7 +116,7 @@ export default function SearchDialog({
         <div className="max-h-[400px] overflow-y-auto py-2 scrollbar-thin">
           {filtered.length === 0 ? (
             <div className="px-4 py-8 text-center text-muted-foreground text-sm">
-              No results found
+              Ничего не найдено
             </div>
           ) : (
             filtered.map((page, idx) => (
@@ -150,13 +150,13 @@ export default function SearchDialog({
         <div className="flex items-center gap-4 px-4 py-2.5 border-t border-border text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1">
             <kbd className="px-1 py-0.5 rounded bg-muted">Up/Dn</kbd>{' '}
-            navigate
+            навигация
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-muted">Enter</kbd> open
+            <kbd className="px-1 py-0.5 rounded bg-muted">Enter</kbd> открыть
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-muted">esc</kbd> close
+            <kbd className="px-1 py-0.5 rounded bg-muted">esc</kbd> закрыть
           </span>
         </div>
       </div>
