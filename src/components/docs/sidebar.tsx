@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Plus, Trash2, FolderPlus, ArrowUp, ArrowDown } from 'lucide-react';
 import type { NavSection } from '@/lib/mdx-utils';
 
@@ -21,10 +21,32 @@ export default function Sidebar({
   onClose,
   canEdit = true,
 }: SidebarProps) {
-  // All sections open by default — user can collapse manually
+  // Only the section containing the current page is open;
+  // all others are collapsed by default.
+  const findActiveSection = (slug: string) => {
+    const sec = navigation.find((s) =>
+      s.pages.some((p) => p.slug === slug)
+    );
+    return sec ? sec.title : '';
+  };
+
   const [openSections, setOpenSections] = React.useState<Set<string>>(
-    () => new Set(navigation.map((s) => s.title))
+    () => {
+      const active = findActiveSection(currentSlug);
+      return new Set(active ? [active] : []);
+    }
   );
+
+  // When navigating to a page in a different section,
+  // collapse previous and open the new active section.
+  useEffect(() => {
+    const active = findActiveSection(currentSlug);
+    setOpenSections((prev) => {
+      if (prev.has(active)) return prev;
+      return new Set(active ? [active] : []);
+    });
+  }, [currentSlug]);
+
   const [deleteTarget, setDeleteTarget] = useState<{ slug: string; title: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [showNewSection, setShowNewSection] = useState(false);
