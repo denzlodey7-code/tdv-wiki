@@ -5,7 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useTheme } from 'next-themes';
-import { Check, Copy, Expand, Shrink } from 'lucide-react';
+import { Check, Copy, Expand } from 'lucide-react';
 
 interface CodeBlockProps {
   children: string;
@@ -225,7 +225,6 @@ export function InlineCode({ children }: { children: React.ReactNode }) {
 export function PlainCodeBlock({ children }: { children: string }) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -257,80 +256,33 @@ export function PlainCodeBlock({ children }: { children: string }) {
     );
   }
 
-  const plainHeader = (onClickExpand?: (e: React.MouseEvent) => void) => (
-    <div
-      className="flex items-center justify-between px-4 py-2.5 border-b shrink-0"
-      style={{
-        background: isDark ? '#15151f' : '#f0f0f0',
-        borderColor: borderColor,
-      }}
-    >
-      <span
-        className={`text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
-      >
-        terminal
-      </span>
-      {onClickExpand && (
-        <button
-          onClick={onClickExpand}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
-            isDark
-              ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
-              : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'
-          }`}
-          aria-label={expanded ? 'Collapse code' : 'Expand code'}
-          title={expanded ? 'Свернуть' : 'Развернуть'}
-        >
-          {expanded ? <Shrink className="h-3.5 w-3.5" /> : <Expand className="h-3.5 w-3.5" />}
-        </button>
-      )}
-    </div>
-  );
-
-  const plainContent = (
-    <div
-      className="font-mono leading-relaxed overflow-x-auto whitespace-pre"
-      style={{
-        background: codeBg,
-        color: isDark ? '#e5e5e5' : '#333',
-        padding: expanded ? '24px' : '16px',
-        fontSize: expanded ? '15px' : '13px',
-      }}
-    >
-      {children.trim()}
-    </div>
-  );
-
-  if (expanded) {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex flex-col"
-        style={{ background: isDark ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)' }}
-        onClick={() => setExpanded(false)}
-      >
-        <div
-          className="mx-auto my-8 w-full max-w-6xl flex flex-col rounded-lg overflow-hidden shadow-2xl"
-          style={{ border: `1px solid ${borderColor}`, maxHeight: 'calc(100vh - 4rem)' }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {plainHeader((e) => { e.stopPropagation(); setExpanded(false); })}
-          <div className="overflow-auto flex-1">
-            {plainContent}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
-      className="my-4 rounded-lg overflow-hidden cursor-pointer"
+      className="my-4 rounded-lg overflow-hidden"
       style={{ border: `1px solid ${borderColor}` }}
-      onClick={() => setExpanded(true)}
-      title="Нажмите для увеличения"
     >
-      {plainHeader((e) => { e.stopPropagation(); setExpanded(true); })}
-      {plainContent}
+      <div
+        className="flex items-center px-4 py-2.5 border-b"
+        style={{
+          background: isDark ? '#15151f' : '#f0f0f0',
+          borderColor: borderColor,
+        }}
+      >
+        <span
+          className={`text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
+        >
+          terminal
+        </span>
+      </div>
+      <div
+        className="p-4 font-mono text-[13px] leading-relaxed overflow-x-auto whitespace-pre"
+        style={{
+          background: codeBg,
+          color: isDark ? '#e5e5e5' : '#333',
+        }}
+      >
+        {children.trim()}
+      </div>
     </div>
   );
 }
@@ -343,7 +295,6 @@ export function MermaidDiagram({ code }: { code: string }) {
   const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
@@ -416,48 +367,21 @@ export function MermaidDiagram({ code }: { code: string }) {
     );
   }
 
-  const diagramContent = svg ? (
-    <div
-      dangerouslySetInnerHTML={{ __html: svg }}
-      className="[&>svg]:max-w-full"
-      style={expanded ? { transform: 'scale(1.3)', transformOrigin: 'center center' } : undefined}
-    />
-  ) : (
-    <div className="flex items-center justify-center py-8">
-      <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground/60" />
-    </div>
-  );
-
-  // Expanded: fullscreen overlay
-  if (expanded && svg) {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center"
-        style={{ background: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.5)' }}
-        onClick={() => setExpanded(false)}
-      >
-        <div
-          className="rounded-lg border border-border bg-background p-8 overflow-auto max-w-[90vw] max-h-[90vh]"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div
-            dangerouslySetInnerHTML={{ __html: svg }}
-            className="[&>svg]:max-w-none [&>svg]:h-auto"
-            style={{ minWidth: '600px' }}
-          />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       ref={containerRef}
-      className="my-4 rounded-lg border border-border bg-muted/50 p-4 overflow-auto cursor-pointer hover:border-ring/50 transition-colors"
-      onClick={() => svg && setExpanded(true)}
-      title="Нажмите для увеличения"
+      className="my-4 rounded-lg border border-border bg-muted/50 p-4 overflow-auto"
     >
-      {diagramContent}
+      {svg ? (
+        <div
+          dangerouslySetInnerHTML={{ __html: svg }}
+          className="[&>svg]:max-w-full"
+        />
+      ) : (
+        <div className="flex items-center justify-center py-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground/60" />
+        </div>
+      )}
     </div>
   );
 }

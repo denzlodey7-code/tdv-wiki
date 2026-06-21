@@ -3,6 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import { CodeBlock, InlineCode, PlainCodeBlock, MermaidDiagram, Callout, Badge } from '@/components/mdx/mdx-components';
+import ExpandableContent from '@/components/mdx/expandable-content';
 
 // Shared MDX components available in all .mdx files
 const mdxComponents = {
@@ -173,8 +174,8 @@ interface MDXContentProps {
  */
 export default function MDXContent({ source }: MDXContentProps) {
   return (
-    <div className="docs-content max-w-none">
+    <ExpandableContent>
       <MDXRemote source={source} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] } }} />
-    </div>
+    </ExpandableContent>
   );
 }
