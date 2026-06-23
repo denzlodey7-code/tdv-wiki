@@ -14,6 +14,8 @@ interface HeaderProps {
   isMobileMenuOpen: boolean;
   currentSlug?: string;
   canEdit?: boolean;
+  version?: string;
+  build?: number;
 }
 
 export default function Header({
@@ -22,6 +24,8 @@ export default function Header({
   isMobileMenuOpen,
   currentSlug,
   canEdit = true,
+  version,
+  build,
 }: HeaderProps) {
   const isWikiIndex = currentSlug === WIKI_INDEX_SLUG;
   const activeTabStyle = 'px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full';
@@ -144,6 +148,12 @@ export default function Header({
             GitHub
             <ExternalLink className="h-3 w-3" />
           </a>
+
+          {version && (
+            <span className="hidden md:inline-flex items-center px-2 py-1 text-[11px] font-mono text-muted-foreground/60 border border-border rounded-md select-none">
+              v{version}{build ? `.${build}` : ''}
+            </span>
+          )}
         </div>
       </div>
     </header>

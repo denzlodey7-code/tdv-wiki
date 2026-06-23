@@ -4,6 +4,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { execSync } from 'child_process';
 import { revalidatePath } from 'next/cache';
+import { bumpVersion } from '@/lib/version';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'docs');
 
@@ -104,8 +105,11 @@ export async function POST(request: NextRequest) {
 
   fs.writeFileSync(filePath, mdxContent, 'utf-8');
 
+  // Bump version
+  const ver = bumpVersion();
+
   // Git commit
-  const commitMsg = body.commitMessage || `docs: create ${slug}`;
+  const commitMsg = body.commitMessage || `docs: create ${slug} (v${ver.version})`;
   gitCommit(filePath, commitMsg);
 
   // Revalidate

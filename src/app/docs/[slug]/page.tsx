@@ -8,6 +8,7 @@ import {
 } from '@/lib/mdx-utils';
 import MDXContent from '@/components/mdx/mdx-content';
 import DocsShell from './docs-shell';
+import { getVersion } from '@/lib/version';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -65,6 +66,8 @@ export default async function DocPage({ params }: PageProps) {
   // and cannot be used inside a Client Component ('use client').
   const renderedContent = <MDXContent source={doc.content} />;
 
+  const version = getVersion();
+
   return (
     <DocsShell
       slug={slug}
@@ -75,6 +78,8 @@ export default async function DocPage({ params }: PageProps) {
       headings={headings}
       adjacent={adjacent}
       canEdit={canEdit}
+      version={version.version}
+      build={version.build}
     />
   );
 }
