@@ -2,17 +2,37 @@ import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
 import noUnicodePolicy from "./eslint-rules/no-unicode-policy.js";
+import antiMonolith from "./eslint-rules/anti-monolith.js";
 
 const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
   files: ["**/*.{ts,tsx,js,jsx}"],
   plugins: {
     "no-unicode-policy": noUnicodePolicy,
+    "anti-monolith": antiMonolith,
   },
   rules: {
     // STD-DOC-003 No-Unicode Policy v2.3
     // [C] Critical - production code
     "no-unicode-policy/no-emoji": "error",
     "no-unicode-policy/no-unicode-graphics": "error",
+
+    // ZAI-ARCH-002 Anti-Monolith v1.0
+    // [C] Critical - file size
+    "anti-monolith/max-file-lines": ["error", {
+      max: 250,
+      exclude: [
+        "next\\.config",
+        "tailwind\\.config",
+        "postcss\\.config",
+        "eslint-rules/",
+      ],
+    }],
+    // [W] Warning - component size
+    "anti-monolith/max-component-lines": ["warn", { max: 200 }],
+    // [W] Warning - useState count per component
+    "anti-monolith/max-use-state": ["warn", { max: 2 }],
+    // [I] Info - function length
+    "anti-monolith/max-function-lines": ["warn", { max: 50 }],
     // STD-DOC-003 section 10.3: enable no-irregular-whitespace
     "no-irregular-whitespace": "error",
 
