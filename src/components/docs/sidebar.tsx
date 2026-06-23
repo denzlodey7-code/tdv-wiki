@@ -277,7 +277,7 @@ export default function Sidebar({
                   ) : (
                     <ChevronRight className="h-3 w-3 mr-1.5 shrink-0" />
                   )}
-                  <span className="break-words truncate">{section.title}</span>
+                  <span className="break-words">{section.title}</span>
                 </button>
                 {canEdit && (
                   <div className="flex items-center shrink-0">
@@ -322,7 +322,7 @@ export default function Sidebar({
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                         }`}
                       >
-                        <span className="truncate">{item.title}</span>
+                        <span className="break-words">{item.title}</span>
                       </button>
                       {canEdit && (
                         <button
