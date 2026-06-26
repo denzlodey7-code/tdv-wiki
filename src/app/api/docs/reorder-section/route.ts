@@ -5,11 +5,11 @@ import matter from 'gray-matter';
 import { execSync } from 'child_process';
 import { revalidatePath } from 'next/cache';
 
-const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'docs');
+const CONTENT_DIR = path.join(process.cwd(), 'docs');
 
 function gitCommitAll(message: string): void {
   try {
-    execSync('git add -A src/content/docs/', { cwd: process.cwd(), stdio: 'pipe' });
+    execSync('git add -A docs/', { cwd: process.cwd(), stdio: 'pipe' });
     execSync(`git commit -m "${message.replace(/"/g, '\\"')}"`, {
       cwd: process.cwd(),
       stdio: 'pipe',

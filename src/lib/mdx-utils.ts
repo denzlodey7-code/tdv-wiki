@@ -1,6 +1,6 @@
 /**
  * MDX Content Utilities
- * Reads .mdx files from src/content/docs, parses frontmatter,
+ * Reads .mdx files from docs/, parses frontmatter,
  * generates navigation structure, and provides content for rendering.
  */
 import fs from 'fs';
@@ -8,7 +8,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import GithubSlugger from 'github-slugger';
 
-const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'docs');
+const CONTENT_DIR = path.join(process.cwd(), 'docs');
 
 export interface DocMeta {
   title: string;
