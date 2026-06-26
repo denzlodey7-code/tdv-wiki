@@ -2,6 +2,7 @@
   "name": "stsdev-wiki-template",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "bun@1.3.14",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -17,6 +18,7 @@
     "@radix-ui/react-scroll-area": "^1.2.9",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@stsgs1980/fab-inspector": "^3.6.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.0",
@@ -36,7 +38,6 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@stsgs1980/fab-inspector": "^3.6.6",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
