@@ -4,13 +4,13 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
 
-  // Allow cross-domain requests from sandbox proxy (Z.ai preview panel)
-  allowedDevOrigins: ["*"],
-
   // Fix Turbopack workspace root inference in Z.ai sandbox
-  turbopack: {
-    root: "/home/z/my-project",
-  },
+  ...(process.env.NODE_ENV !== "production" && {
+    turbopack: {
+      root: "/home/z/my-project",
+    },
+    allowedDevOrigins: ["*"],
+  }),
 };
 
 export default nextConfig;
