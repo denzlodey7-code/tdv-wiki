@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useTheme } from 'next-themes';
-import { Check, Copy } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTheme } from "next-themes";
+import { Check, Copy } from "lucide-react";
 
 interface CodeBlockProps {
   children: string;
@@ -26,7 +26,7 @@ interface CodeBlockProps {
  */
 export function CodeBlock({
   children,
-  language = 'text',
+  language = "text",
   filename,
   showLineNumbers = true,
 }: CodeBlockProps) {
@@ -38,11 +38,11 @@ export function CodeBlock({
     setMounted(true);
   }, []);
 
-  const isDark = mounted ? resolvedTheme === 'dark' : false;
-  const codeBg = isDark ? '#0f0f1a' : '#fafafa';
-  const headerBg = isDark ? '#15151f' : '#f0f0f0';
-  const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)';
-  const lineNumberColor = isDark ? '#3a3a4a' : '#c8c8c8';
+  const isDark = mounted ? resolvedTheme === "dark" : false;
+  const codeBg = isDark ? "#0f0f1a" : "#fafafa";
+  const headerBg = isDark ? "#15151f" : "#f0f0f0";
+  const borderColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
+  const lineNumberColor = isDark ? "#3a3a4a" : "#c8c8c8";
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(children.trim());
@@ -50,11 +50,11 @@ export function CodeBlock({
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback for contexts where clipboard API is unavailable
-      const textarea = document.createElement('textarea');
+      const textarea = document.createElement("textarea");
       textarea.value = children.trim();
       document.body.appendChild(textarea);
       textarea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textarea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -66,20 +66,26 @@ export function CodeBlock({
   if (!mounted) {
     return (
       <div
-        className="my-4 rounded-lg overflow-hidden"
-        style={{ border: '1px solid var(--code-border)' }}
+        className="my-4 overflow-hidden rounded-lg"
+        style={{ border: "1px solid var(--code-border)" }}
       >
         <div
-          className="flex items-center justify-between px-4 py-2.5 border-b"
-          style={{ background: 'var(--code-header-bg)', borderColor: 'var(--code-border)' }}
+          className="flex items-center justify-between border-b px-4 py-2.5"
+          style={{
+            background: "var(--code-header-bg)",
+            borderColor: "var(--code-border)",
+          }}
         >
-          <span className="text-xs font-mono" style={{ color: 'var(--muted-foreground)' }}>
+          <span
+            className="font-mono text-xs"
+            style={{ color: "var(--muted-foreground)" }}
+          >
             {filename || language}
           </span>
         </div>
         <div
-          className="p-4 font-mono text-[13px] leading-relaxed whitespace-pre overflow-x-auto"
-          style={{ background: 'var(--code-bg)', color: 'var(--foreground)' }}
+          className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed whitespace-pre"
+          style={{ background: "var(--code-bg)", color: "var(--foreground)" }}
         >
           {children.trim()}
         </div>
@@ -91,22 +97,22 @@ export function CodeBlock({
   const highlighterProps = {
     style: (isDark ? oneDark : oneLight) as object,
     language,
-    PreTag: 'div' as const,
+    PreTag: "div" as const,
     showLineNumbers,
     customStyle: {
       margin: 0,
       borderRadius: 0,
       background: codeBg,
-      fontSize: '13px',
-      padding: '16px',
-      border: 'none',
+      fontSize: "13px",
+      padding: "16px",
+      border: "none",
     },
     lineNumberStyle: {
-      minWidth: '2.5em',
-      paddingRight: '1em',
+      minWidth: "2.5em",
+      paddingRight: "1em",
       color: lineNumberColor,
-      userSelect: 'none' as const,
-      background: 'transparent',
+      userSelect: "none" as const,
+      background: "transparent",
     },
     codeTagProps: {
       style: {
@@ -118,21 +124,24 @@ export function CodeBlock({
 
   const headerBar = (
     <div
-      className="flex items-center justify-between px-4 py-2.5 border-b shrink-0"
+      className="flex shrink-0 items-center justify-between border-b px-4 py-2.5"
       style={{ background: headerBg, borderColor: borderColor }}
     >
       <span
-        className={`text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
+        className={`font-mono text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}
       >
         {filename || language}
       </span>
       <div className="flex items-center gap-1">
         <button
-          onClick={(e) => { e.stopPropagation(); handleCopy(); }}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCopy();
+          }}
+          className={`flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors ${
             isDark
-              ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
-              : 'text-gray-500 hover:text-gray-700 hover:bg-black/5'
+              ? "text-gray-400 hover:bg-white/5 hover:text-gray-200"
+              : "text-gray-500 hover:bg-black/5 hover:text-gray-700"
           }`}
           aria-label="Copy code"
         >
@@ -154,7 +163,7 @@ export function CodeBlock({
 
   return (
     <div
-      className="my-4 rounded-lg overflow-hidden"
+      className="my-4 overflow-hidden rounded-lg"
       style={{ border: `1px solid ${borderColor}` }}
       data-expandable
     >

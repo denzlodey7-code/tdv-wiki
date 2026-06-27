@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * API authentication middleware.
@@ -11,19 +11,19 @@ export function middleware(request: NextRequest) {
   if (!apiKey) return NextResponse.next();
 
   // Allow GET requests without auth (read-only)
-  if (request.method === 'GET') return NextResponse.next();
+  if (request.method === "GET") return NextResponse.next();
 
   // Skip non-API routes
-  if (!request.nextUrl.pathname.startsWith('/api/')) return NextResponse.next();
+  if (!request.nextUrl.pathname.startsWith("/api/")) return NextResponse.next();
 
-  const auth = request.headers.get('authorization');
+  const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${apiKey}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/api/:path*',
+  matcher: "/api/:path*",
 };

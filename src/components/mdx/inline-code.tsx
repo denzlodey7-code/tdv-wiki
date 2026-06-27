@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 /**
  * Inline code component — for single-line code snippets within paragraphs.
@@ -8,7 +8,7 @@ import React from 'react';
  */
 export function InlineCode({ children }: { children: React.ReactNode }) {
   return (
-    <code className="px-1.5 py-0.5 rounded bg-muted text-foreground/90 text-sm font-mono">
+    <code className="bg-muted text-foreground/90 rounded px-1.5 py-0.5 font-mono text-sm">
       {children}
     </code>
   );

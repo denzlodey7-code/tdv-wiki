@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { Search, Command } from 'lucide-react';
-import type { NavSection } from '@/lib/mdx-utils';
+import React, { useEffect, useState, useCallback } from "react";
+import { Search, Command } from "lucide-react";
+import type { NavSection } from "@/lib/mdx-utils";
 
 interface SearchDialogProps {
   open: boolean;
@@ -17,7 +17,7 @@ export default function SearchDialog({
   onNavigate,
   navigation,
 }: SearchDialogProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Flatten all pages for search (include snippet for content search)
@@ -26,8 +26,8 @@ export default function SearchDialog({
       slug: item.slug,
       title: item.title,
       section: section.title,
-      snippet: item.snippet || '',
-    }))
+      snippet: item.snippet || "",
+    })),
   );
 
   const filtered = query
@@ -47,14 +47,14 @@ export default function SearchDialog({
       onNavigate(slug);
       onClose();
     },
-    [onNavigate, onClose]
+    [onNavigate, onClose],
   );
 
   // Reset state when dialog closes
   useEffect(() => {
     if (!open) {
       const timer = setTimeout(() => {
-        setQuery('');
+        setQuery("");
         setSelectedIndex(0);
       }, 150);
       return () => clearTimeout(timer);
@@ -72,13 +72,13 @@ export default function SearchDialog({
     if (!open) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
         setSelectedIndex((prev) => Math.min(prev + 1, filtered.length - 1));
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelectedIndex((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         e.preventDefault();
         setSelectedIndex((current) => {
           if (filtered[current]) {
@@ -86,14 +86,14 @@ export default function SearchDialog({
           }
           return current;
         });
-      } else if (e.key === 'Escape') {
+      } else if (e.key === "Escape") {
         e.preventDefault();
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, filtered, handleNavigate, onClose]);
 
   if (!open) return null;
@@ -101,23 +101,23 @@ export default function SearchDialog({
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       <div className="fixed inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative w-full max-w-[560px] mx-4 rounded-xl border border-border bg-background shadow-2xl overflow-hidden">
-        <div className="flex items-center px-4 border-b border-border">
-          <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+      <div className="border-border bg-background relative mx-4 w-full max-w-[560px] overflow-hidden rounded-xl border shadow-2xl">
+        <div className="border-border flex items-center border-b px-4">
+          <Search className="text-muted-foreground h-4 w-4 shrink-0" />
           <input
             autoFocus
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="Search documentation..."
-            className="flex-1 bg-transparent px-3 py-3.5 text-[var(--text-md)] text-foreground outline-none placeholder:text-muted-foreground"
+            className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent px-3 py-3.5 text-[var(--text-md)] outline-none"
           />
-          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-muted text-[11px] text-muted-foreground">
+          <kbd className="bg-muted text-muted-foreground hidden items-center gap-0.5 rounded px-1.5 py-0.5 text-[11px] sm:flex">
             ESC
           </kbd>
         </div>
-        <div className="max-h-[400px] overflow-y-auto py-2 scrollbar-thin">
+        <div className="max-h-[400px] scrollbar-thin overflow-y-auto py-2">
           {filtered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-muted-foreground text-sm">
+            <div className="text-muted-foreground px-4 py-8 text-center text-sm">
               Ничего не найдено
             </div>
           ) : (
@@ -126,22 +126,20 @@ export default function SearchDialog({
                 key={page.slug}
                 onClick={() => handleNavigate(page.slug)}
                 onMouseEnter={() => setSelectedIndex(idx)}
-                className={`flex items-center w-full px-4 py-2.5 text-left transition-colors ${
-                  idx === selectedIndex
-                    ? 'bg-muted'
-                    : 'hover:bg-muted/50'
+                className={`flex w-full items-center px-4 py-2.5 text-left transition-colors ${
+                  idx === selectedIndex ? "bg-muted" : "hover:bg-muted/50"
                 }`}
               >
-                <div className="flex-1 min-w-0">
-                  <div className="text-[var(--text-base)] text-foreground truncate">
+                <div className="min-w-0 flex-1">
+                  <div className="text-foreground truncate text-[var(--text-base)]">
                     {page.title}
                   </div>
-                  <div className="text-[12px] text-muted-foreground truncate">
+                  <div className="text-muted-foreground truncate text-[12px]">
                     {page.section}
                   </div>
                 </div>
                 {idx === selectedIndex && (
-                  <span className="text-[11px] text-muted-foreground ml-2 shrink-0">
+                  <span className="text-muted-foreground ml-2 shrink-0 text-[11px]">
                     Enter
                   </span>
                 )}
@@ -149,16 +147,15 @@ export default function SearchDialog({
             ))
           )}
         </div>
-        <div className="flex items-center gap-4 px-4 py-2.5 border-t border-border text-[11px] text-muted-foreground">
+        <div className="border-border text-muted-foreground flex items-center gap-4 border-t px-4 py-2.5 text-[11px]">
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-muted">Up/Dn</kbd>{' '}
-            навигация
+            <kbd className="bg-muted rounded px-1 py-0.5">Up/Dn</kbd> навигация
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-muted">Enter</kbd> открыть
+            <kbd className="bg-muted rounded px-1 py-0.5">Enter</kbd> открыть
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-muted">esc</kbd> закрыть
+            <kbd className="bg-muted rounded px-1 py-0.5">esc</kbd> закрыть
           </span>
         </div>
       </div>
@@ -170,11 +167,11 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+      className="bg-muted/50 border-border hover:bg-muted text-muted-foreground hover:text-foreground flex items-center gap-2 rounded-lg border px-3 py-1.5 transition-colors"
     >
       <Search className="h-3.5 w-3.5" />
       <span className="text-[var(--text-sm)]">Search</span>
-      <kbd className="hidden sm:flex items-center gap-0.5 text-[11px] text-muted-foreground ml-2">
+      <kbd className="text-muted-foreground ml-2 hidden items-center gap-0.5 text-[11px] sm:flex">
         <Command className="h-3 w-3" />K
       </kbd>
     </button>

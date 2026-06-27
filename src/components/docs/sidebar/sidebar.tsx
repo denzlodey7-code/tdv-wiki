@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
-import type { NavSection } from '@/lib/mdx-utils';
-import { useSidebarDeletion } from './use-sidebar-deletion';
-import { useSidebarSectionCreation } from './use-sidebar-section-creation';
-import DeleteDialog from './delete-dialog';
-import NewSectionDialog from './new-section-dialog';
-import SidebarNav from './sidebar-nav';
-import MobileDrawer from './mobile-drawer';
+import React, { useState, useCallback, useEffect } from "react";
+import type { NavSection } from "@/lib/mdx-utils";
+import { useSidebarDeletion } from "./use-sidebar-deletion";
+import { useSidebarSectionCreation } from "./use-sidebar-section-creation";
+import DeleteDialog from "./delete-dialog";
+import NewSectionDialog from "./new-section-dialog";
+import SidebarNav from "./sidebar-nav";
+import MobileDrawer from "./mobile-drawer";
 
 interface SidebarProps {
   currentSlug: string;
@@ -27,19 +27,15 @@ export default function Sidebar({
   canEdit = true,
 }: SidebarProps) {
   const findActiveSection = (slug: string) => {
-    if (!navigation?.length) return '';
-    const sec = navigation.find((s) =>
-      s.items.some((p) => p.slug === slug)
-    );
-    return sec ? sec.title : '';
+    if (!navigation?.length) return "";
+    const sec = navigation.find((s) => s.items.some((p) => p.slug === slug));
+    return sec ? sec.title : "";
   };
 
-  const [openSections, setOpenSections] = useState<Set<string>>(
-    () => {
-      const active = findActiveSection(currentSlug);
-      return new Set(active ? [active] : []);
-    }
-  );
+  const [openSections, setOpenSections] = useState<Set<string>>(() => {
+    const active = findActiveSection(currentSlug);
+    return new Set(active ? [active] : []);
+  });
 
   useEffect(() => {
     const active = findActiveSection(currentSlug);
@@ -70,52 +66,51 @@ export default function Sidebar({
     window.location.href = `/docs/new/?${params.toString()}`;
   }, []);
 
-  const handleMoveSection = useCallback(async (sectionTitle: string, direction: 'up' | 'down') => {
-    const idx = navigation.findIndex((s) => s.title === sectionTitle);
-    if (idx < 0) return;
-    if (direction === 'up' && idx === 0) return;
-    if (direction === 'down' && idx === navigation.length - 1) return;
+  const handleMoveSection = useCallback(
+    async (sectionTitle: string, direction: "up" | "down") => {
+      const idx = navigation.findIndex((s) => s.title === sectionTitle);
+      if (idx < 0) return;
+      if (direction === "up" && idx === 0) return;
+      if (direction === "down" && idx === navigation.length - 1) return;
 
-    setMoving(sectionTitle);
+      setMoving(sectionTitle);
 
-    const newSections: Record<string, number> = {};
-    navigation.forEach((s) => {
-      newSections[s.title] = s.order;
-    });
-
-    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-    const currentOrder = newSections[sectionTitle];
-    const swapOrder = newSections[navigation[swapIdx].title];
-
-    newSections[sectionTitle] = swapOrder;
-    newSections[navigation[swapIdx].title] = currentOrder;
-
-    try {
-      const res = await fetch('/api/docs/reorder-section', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sections: newSections }),
+      const newSections: Record<string, number> = {};
+      navigation.forEach((s) => {
+        newSections[s.title] = s.order;
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Reorder failed');
+      const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+      const currentOrder = newSections[sectionTitle];
+      const swapOrder = newSections[navigation[swapIdx].title];
+
+      newSections[sectionTitle] = swapOrder;
+      newSections[navigation[swapIdx].title] = currentOrder;
+
+      try {
+        const res = await fetch("/api/docs/reorder-section", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sections: newSections }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Reorder failed");
+        }
+
+        window.location.reload();
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Ошибка перемещения");
+      } finally {
+        setMoving(null);
       }
+    },
+    [navigation],
+  );
 
-      window.location.reload();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Ошибка перемещения');
-    } finally {
-      setMoving(null);
-    }
-  }, [navigation]);
-
-  const {
-    deleteTarget,
-    setDeleteTarget,
-    deleting,
-    handleDeleteConfirm,
-  } = useSidebarDeletion(currentSlug, navigation, onNavigate);
+  const { deleteTarget, setDeleteTarget, deleting, handleDeleteConfirm } =
+    useSidebarDeletion(currentSlug, navigation, onNavigate);
 
   const {
     showNewSection,
@@ -143,8 +138,8 @@ export default function Sidebar({
         onMoveSection={handleMoveSection}
         onCreateInSection={handleCreateInSection}
         onNewSectionClick={() => {
-          setNewSectionPosition('end');
-          setNewSectionRef(navigation[navigation.length - 1]?.title || '');
+          setNewSectionPosition("end");
+          setNewSectionRef(navigation[navigation.length - 1]?.title || "");
           setShowNewSection(true);
         }}
         moving={moving}
@@ -168,9 +163,9 @@ export default function Sidebar({
         onCreate={handleCreateNewSection}
         onCancel={() => {
           setShowNewSection(false);
-          setNewSectionName('');
-          setNewSectionPosition('end');
-          setNewSectionRef('');
+          setNewSectionName("");
+          setNewSectionPosition("end");
+          setNewSectionRef("");
         }}
       />
     </>
@@ -179,7 +174,7 @@ export default function Sidebar({
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden xl:block shrink-0 border-r border-border bg-sidebar h-[calc(100vh-49px)] sticky top-[49px]">
+      <aside className="border-border bg-sidebar sticky top-[49px] hidden h-[calc(100vh-49px)] shrink-0 border-r xl:block">
         {sidebarContent}
       </aside>
 

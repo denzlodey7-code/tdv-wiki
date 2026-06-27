@@ -1,4 +1,4 @@
-import type { NavSection } from '@/lib/mdx-utils';
+import type { NavSection } from "@/lib/mdx-utils";
 
 export interface SectionOrderResult {
   sectionOrder: number;
@@ -12,7 +12,7 @@ export interface SectionOrderResult {
  */
 export function calculateSectionOrder(
   navigation: NavSection[],
-  position: 'end' | 'before' | 'after',
+  position: "end" | "before" | "after",
   ref: string,
   title: string,
 ): SectionOrderResult {
@@ -20,7 +20,7 @@ export function calculateSectionOrder(
   let needsRenumber = false;
   const renumberedSections: Record<string, number> = {};
 
-  if (position === 'end' || !ref) {
+  if (position === "end" || !ref) {
     const maxOrder = navigation.reduce((max, s) => Math.max(max, s.order), 0);
     sectionOrder = maxOrder + 100;
   } else {
@@ -29,9 +29,14 @@ export function calculateSectionOrder(
       sectionOrder = navigation.length * 100;
     } else {
       const refOrder = navigation[refIdx].order;
-      const neighborOrder = position === 'before'
-        ? (refIdx > 0 ? navigation[refIdx - 1].order : 0)
-        : (refIdx < navigation.length - 1 ? navigation[refIdx + 1].order : refOrder + 200);
+      const neighborOrder =
+        position === "before"
+          ? refIdx > 0
+            ? navigation[refIdx - 1].order
+            : 0
+          : refIdx < navigation.length - 1
+            ? navigation[refIdx + 1].order
+            : refOrder + 200;
       sectionOrder = Math.round((refOrder + neighborOrder) / 2);
 
       // Collision: renumber all sections with 100-step spacing
@@ -41,10 +46,10 @@ export function calculateSectionOrder(
         for (let i = 0; i < navigation.length; i++) {
           renumberedSections[navigation[i].title] = counter;
           counter += 100;
-          if (position === 'before' && i === refIdx) {
+          if (position === "before" && i === refIdx) {
             renumberedSections[title] = counter;
             counter += 100;
-          } else if (position === 'after' && i === refIdx) {
+          } else if (position === "after" && i === refIdx) {
             renumberedSections[title] = counter;
             counter += 100;
           }

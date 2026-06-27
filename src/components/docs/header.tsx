@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { SearchButton } from './search-dialog';
-import ThemeToggle from './theme-toggle';
-import { Menu, X, ExternalLink, Plus } from 'lucide-react';
+import React from "react";
+import Link from "next/link";
+import { SearchButton } from "./search-dialog";
+import ThemeToggle from "./theme-toggle";
+import { Menu, X, ExternalLink, Plus } from "lucide-react";
 
-const WIKI_INDEX_SLUG = 'o-sts-wiki-index';
+const WIKI_INDEX_SLUG = "o-sts-wiki-index";
 
 interface HeaderProps {
   onSearchOpen: () => void;
@@ -28,22 +28,24 @@ export default function Header({
   build,
 }: HeaderProps) {
   const isWikiIndex = currentSlug === WIKI_INDEX_SLUG;
-  const activeTabStyle = 'px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full';
-  const inactiveTabStyle = 'px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors';
+  const activeTabStyle =
+    "px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full";
+  const inactiveTabStyle =
+    "px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors";
   return (
-    <header className="sticky top-0 z-30 h-[49px] flex items-center border-b border-border bg-background">
-      <div className="flex items-center w-full px-4">
+    <header className="border-border bg-background sticky top-0 z-30 flex h-[49px] items-center border-b">
+      <div className="flex w-full items-center px-4">
         {/* Left: Logo + Nav */}
         <div className="flex items-center gap-4">
           <button
             onClick={onMobileMenuToggle}
-            className="xl:hidden p-1.5 -ml-1.5 rounded-md hover:bg-muted transition-colors"
+            className="hover:bg-muted -ml-1.5 rounded-md p-1.5 transition-colors xl:hidden"
             aria-label="Navigation menu"
           >
             {isMobileMenuOpen ? (
-              <X className="h-5 w-5 text-muted-foreground" />
+              <X className="text-muted-foreground h-5 w-5" />
             ) : (
-              <Menu className="h-5 w-5 text-muted-foreground" />
+              <Menu className="text-muted-foreground h-5 w-5" />
             )}
           </button>
 
@@ -77,12 +79,12 @@ export default function Header({
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-[var(--text-md)] font-semibold text-foreground">
+            <span className="text-foreground font-semibold text-[var(--text-md)]">
               StsDev Wiki
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1 ml-4">
+          <nav className="ml-4 hidden items-center gap-1 md:flex">
             <Link
               href={`/docs/${WIKI_INDEX_SLUG}/`}
               className={isWikiIndex ? activeTabStyle : inactiveTabStyle}
@@ -99,12 +101,12 @@ export default function Header({
         </div>
 
         {/* Right: Actions + Theme + Search */}
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="ml-auto flex items-center gap-2">
           {/* Create new page — only in server mode */}
           {canEdit && (
             <Link
               href="/docs/new/"
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted hidden items-center gap-1 rounded-md px-2.5 py-1.5 text-[var(--text-sm)] transition-colors sm:flex"
               title="Create page"
             >
               <Plus className="h-4 w-4" />
@@ -116,7 +118,7 @@ export default function Header({
           {canEdit && currentSlug && (
             <Link
               href={`/docs/${currentSlug}/edit/`}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-1 rounded-md px-2.5 py-1.5 text-[var(--text-sm)] transition-colors"
               title="Edit this page"
             >
               <svg
@@ -143,15 +145,16 @@ export default function Header({
             href="https://github.com/stsgs1980/StsDev-Wiki-Template"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-[var(--text-sm)] font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors"
+            className="bg-foreground text-background hover:bg-foreground/90 hidden items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium text-[var(--text-sm)] transition-colors sm:flex"
           >
             GitHub
             <ExternalLink className="h-3 w-3" />
           </a>
 
           {version && (
-            <span className="hidden md:inline-flex items-center px-2 py-1 text-[11px] font-mono text-muted-foreground/60 border border-border rounded-md select-none">
-              v{version}{build ? `.${build}` : ''}
+            <span className="text-muted-foreground/60 border-border hidden items-center rounded-md border px-2 py-1 font-mono text-[11px] select-none md:inline-flex">
+              v{version}
+              {build ? `.${build}` : ""}
             </span>
           )}
         </div>

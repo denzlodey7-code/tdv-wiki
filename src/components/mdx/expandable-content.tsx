@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { X } from "lucide-react";
 
 /**
  * ExpandableContent — universal click-to-expand wrapper for docs-content.
@@ -19,66 +19,74 @@ import { X } from 'lucide-react';
 
 /** CSS selectors for expandable block types */
 const EXPANDABLE_SELECTOR = [
-  '[data-expandable]',                 // CodeBlock, PlainCodeBlock (explicit marker)
-  'div.overflow-x-auto',               // table overflow wrappers
-  'img.max-w-full',                    // images
-].join(', ');
+  "[data-expandable]", // CodeBlock, PlainCodeBlock (explicit marker)
+  "div.overflow-x-auto", // table overflow wrappers
+  "img.max-w-full", // images
+].join(", ");
 
 async function copyTextToClipboard(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text.trim());
     return true;
   } catch {
-    const textarea = document.createElement('textarea');
+    const textarea = document.createElement("textarea");
     textarea.value = text.trim();
     document.body.appendChild(textarea);
     textarea.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     document.body.removeChild(textarea);
     return true;
   }
 }
 
-export default function ExpandableContent({ children }: { children: React.ReactNode }) {
+export default function ExpandableContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
-  const [expandedHtml, setExpandedHtml] = useState('');
+  const [expandedHtml, setExpandedHtml] = useState("");
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const close = useCallback(() => {
     setExpanded(false);
-    setExpandedHtml('');
+    setExpandedHtml("");
   }, []);
 
   // Close on Escape
   useEffect(() => {
     if (!expanded) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close();
+      if (e.key === "Escape") close();
     };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [expanded, close]);
 
   // Inject expandable-block cursor style via DOM (not <style> in JSX)
   useEffect(() => {
-    const id = 'expandable-content-cursor-style';
+    const id = "expandable-content-cursor-style";
     if (document.getElementById(id)) return;
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = id;
     style.textContent = `.docs-content ${EXPANDABLE_SELECTOR} { cursor: pointer; }`;
     document.head.appendChild(style);
-    return () => { style.remove(); };
+    return () => {
+      style.remove();
+    };
   }, []);
 
   // Lock body scroll when expanded
   useEffect(() => {
     if (expanded) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [expanded]);
 
   // Wire Copy buttons and TOC links inside overlay via event delegation
@@ -91,29 +99,31 @@ export default function ExpandableContent({ children }: { children: React.ReactN
       const target = e.target as HTMLElement;
 
       // Copy button — find the closest [aria-label="Copy code"]
-      const copyBtn = target.closest('[aria-label="Copy code"]') as HTMLElement | null;
+      const copyBtn = target.closest(
+        '[aria-label="Copy code"]',
+      ) as HTMLElement | null;
       if (copyBtn) {
         e.preventDefault();
         e.stopPropagation();
 
         // Find the code content: sibling container with pre/code or whitespace-pre div
-        const codeContainer = copyBtn.closest('.rounded-lg');
+        const codeContainer = copyBtn.closest(".rounded-lg");
         const codeEl = codeContainer?.querySelector(
-          'pre code, pre, div[style*="white-space: pre"], div.whitespace-pre'
+          'pre code, pre, div[style*="white-space: pre"], div.whitespace-pre',
         ) as HTMLElement | null;
-        const text = codeEl?.textContent || '';
+        const text = codeEl?.textContent || "";
 
         await copyTextToClipboard(text);
 
         // Visual feedback: swap icon text to "Copied"
-        const spanEl = copyBtn.querySelector('span');
+        const spanEl = copyBtn.querySelector("span");
         if (spanEl) {
           const original = spanEl.textContent;
-          spanEl.textContent = 'Copied';
-          spanEl.style.color = '#22c55e';
+          spanEl.textContent = "Copied";
+          spanEl.style.color = "#22c55e";
           setTimeout(() => {
             spanEl.textContent = original;
-            spanEl.style.color = '';
+            spanEl.style.color = "";
           }, 2000);
         }
         return;
@@ -125,19 +135,19 @@ export default function ExpandableContent({ children }: { children: React.ReactN
         e.preventDefault();
         e.stopPropagation();
         // In overlay, scroll to the target element within the overlay
-        const href = (anchor as HTMLAnchorElement).getAttribute('href');
+        const href = (anchor as HTMLAnchorElement).getAttribute("href");
         if (href) {
           const targetEl = overlay.querySelector(href);
           if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
           }
         }
         return;
       }
     };
 
-    overlay.addEventListener('click', handleOverlayClick);
-    return () => overlay.removeEventListener('click', handleOverlayClick);
+    overlay.addEventListener("click", handleOverlayClick);
+    return () => overlay.removeEventListener("click", handleOverlayClick);
   }, [expanded]);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
@@ -145,11 +155,11 @@ export default function ExpandableContent({ children }: { children: React.ReactN
 
     // Don't expand on interactive elements (buttons, links, inputs)
     if (
-      target.closest('button') ||
-      target.closest('a') ||
-      target.closest('input') ||
-      target.closest('select') ||
-      target.closest('textarea')
+      target.closest("button") ||
+      target.closest("a") ||
+      target.closest("input") ||
+      target.closest("select") ||
+      target.closest("textarea")
     ) {
       return;
     }
@@ -176,7 +186,7 @@ export default function ExpandableContent({ children }: { children: React.ReactN
         ref={wrapperRef}
         onClick={handleClick}
         className="docs-content max-w-none"
-        style={{ cursor: 'default' }}
+        style={{ cursor: "default" }}
       >
         {children}
       </div>
@@ -185,28 +195,26 @@ export default function ExpandableContent({ children }: { children: React.ReactN
       {expanded && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
           onClick={close}
         >
           <div
             ref={overlayRef}
-            className="bg-background rounded-lg border border-border overflow-auto max-w-[95vw] max-h-[92vh] w-full"
+            className="bg-background border-border max-h-[92vh] w-full max-w-[95vw] overflow-auto rounded-lg border"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
-            <div className="sticky top-0 z-10 flex justify-end p-2 bg-background/80 backdrop-blur-sm border-b border-border">
+            <div className="bg-background/80 border-border sticky top-0 z-10 flex justify-end border-b p-2 backdrop-blur-sm">
               <button
                 onClick={close}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors"
               >
                 <X className="h-3.5 w-3.5" />
                 Закрыть
               </button>
             </div>
             {/* Cloned content */}
-            <div
-              className="p-6 [&_svg]:max-w-full [&_svg]:w-full [&_svg]:h-auto"
-            >
+            <div className="p-6 [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-full">
               <div dangerouslySetInnerHTML={{ __html: expandedHtml }} />
             </div>
           </div>

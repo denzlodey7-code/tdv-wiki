@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -8,7 +8,11 @@ interface MobileDrawerProps {
   children: React.ReactNode;
 }
 
-export default function MobileDrawer({ isOpen, onClose, children }: MobileDrawerProps) {
+export default function MobileDrawer({
+  isOpen,
+  onClose,
+  children,
+}: MobileDrawerProps) {
   if (!isOpen) return null;
 
   return (
@@ -17,8 +21,8 @@ export default function MobileDrawer({ isOpen, onClose, children }: MobileDrawer
         className="fixed inset-0 z-40 bg-black/60 xl:hidden"
         onClick={onClose}
       />
-      <aside className="fixed left-0 top-0 z-50 w-[280px] h-full bg-sidebar xl:hidden shadow-2xl">
-        <div className="flex items-center h-[49px] px-4 border-b border-border gap-2">
+      <aside className="bg-sidebar fixed top-0 left-0 z-50 h-full w-[280px] shadow-2xl xl:hidden">
+        <div className="border-border flex h-[49px] items-center gap-2 border-b px-4">
           <svg
             width="18"
             height="18"
@@ -48,7 +52,7 @@ export default function MobileDrawer({ isOpen, onClose, children }: MobileDrawer
               strokeLinejoin="round"
             />
           </svg>
-          <span className="text-sm font-medium text-foreground">
+          <span className="text-foreground text-sm font-medium">
             StsDev Wiki
           </span>
         </div>

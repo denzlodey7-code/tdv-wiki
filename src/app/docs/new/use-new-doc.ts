@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import type { ReadonlyURLSearchParams } from 'next/navigation';
-import { slugify } from '@/lib/slugify';
-import { createDoc, uploadDocs } from '@/lib/docs-actions';
+import { useState, useCallback } from "react";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import type { ReadonlyURLSearchParams } from "next/navigation";
+import { slugify } from "@/lib/slugify";
+import { createDoc, uploadDocs } from "@/lib/docs-actions";
 
 /**
  * Hook for file drag & drop handling.
@@ -29,12 +29,16 @@ function useFileDragUpload(handleFileUpload: (files: FileList | null) => void) {
  * Form state for new document creation.
  */
 function useNewDocFormState(searchParams: ReadonlyURLSearchParams) {
-  const [title, setTitle] = useState('');
-  const [section, setSection] = useState(searchParams.get('section') || '');
-  const [slug, setSlug] = useState('');
-  const [sectionOrder, setSectionOrder] = useState(searchParams.get('sectionOrder') || '');
-  const [order, setOrder] = useState('0');
-  const [content, setContent] = useState('# Новая страница\n\nНачните писать здесь...');
+  const [title, setTitle] = useState("");
+  const [section, setSection] = useState(searchParams.get("section") || "");
+  const [slug, setSlug] = useState("");
+  const [sectionOrder, setSectionOrder] = useState(
+    searchParams.get("sectionOrder") || "",
+  );
+  const [order, setOrder] = useState("0");
+  const [content, setContent] = useState(
+    "# Новая страница\n\nНачните писать здесь...",
+  );
 
   const handleTitleChange = (val: string) => {
     setTitle(val);
@@ -42,9 +46,19 @@ function useNewDocFormState(searchParams: ReadonlyURLSearchParams) {
   };
 
   return {
-    title, setTitle, section, setSection, slug, setSlug,
-    sectionOrder, setSectionOrder, order, setOrder,
-    content, setContent, handleTitleChange,
+    title,
+    setTitle,
+    section,
+    setSection,
+    slug,
+    setSlug,
+    sectionOrder,
+    setSectionOrder,
+    order,
+    setOrder,
+    content,
+    setContent,
+    handleTitleChange,
   };
 }
 
@@ -56,17 +70,24 @@ interface UseNewDocParams {
 export function useNewDoc({ router, searchParams }: UseNewDocParams) {
   const form = useNewDocFormState(searchParams);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
 
   const handleSave = useCallback(async () => {
     if (!form.title || !form.slug) {
-      setError('Заголовок и slug обязательны');
+      setError("Заголовок и slug обязательны");
       return;
     }
     setSaving(true);
-    setError('');
-    const result = await createDoc(form.title, form.slug, form.section, form.sectionOrder, form.order, form.content);
+    setError("");
+    const result = await createDoc(
+      form.title,
+      form.slug,
+      form.section,
+      form.sectionOrder,
+      form.order,
+      form.content,
+    );
     if (result.success) {
       router.push(`/docs/${result.slug}`);
       router.refresh();
@@ -74,13 +95,21 @@ export function useNewDoc({ router, searchParams }: UseNewDocParams) {
       setError(result.error);
     }
     setSaving(false);
-  }, [form.title, form.slug, form.section, form.sectionOrder, form.order, form.content, router]);
+  }, [
+    form.title,
+    form.slug,
+    form.section,
+    form.sectionOrder,
+    form.order,
+    form.content,
+    router,
+  ]);
 
   const handleFileUpload = useCallback(
     async (files: FileList | null) => {
       if (!files || files.length === 0) return;
       setUploading(true);
-      setError('');
+      setError("");
       const result = await uploadDocs(files, form.section);
       if (result.success && result.slug) {
         router.push(`/docs/${result.slug}`);
@@ -95,5 +124,13 @@ export function useNewDoc({ router, searchParams }: UseNewDocParams) {
 
   const dragHandlers = useFileDragUpload(handleFileUpload);
 
-  return { ...form, saving, error, uploading, handleSave, handleFileUpload, ...dragHandlers };
+  return {
+    ...form,
+    saving,
+    error,
+    uploading,
+    handleSave,
+    handleFileUpload,
+    ...dragHandlers,
+  };
 }

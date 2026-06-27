@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { execSync } from 'child_process';
-import { revalidatePath } from 'next/cache';
-import { bumpVersion } from '@/lib/version';
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { execSync } from "child_process";
+import { revalidatePath } from "next/cache";
+import { bumpVersion } from "@/lib/version";
 
-const CONTENT_DIR = path.join(process.cwd(), 'docs');
+const CONTENT_DIR = path.join(process.cwd(), "docs");
 
 function buildMdxFile(data: {
   title: string;
@@ -16,7 +16,8 @@ function buildMdxFile(data: {
   slug: string;
   content: string;
 }): string {
-  const sectionOrderLine = data.sectionOrder != null ? `\nsectionOrder: ${data.sectionOrder}` : '';
+  const sectionOrderLine =
+    data.sectionOrder != null ? `\nsectionOrder: ${data.sectionOrder}` : "";
   return `---
 title: "${data.title.replace(/"/g, '\\"')}"
 section: "${data.section.replace(/"/g, '\\"')}"${sectionOrderLine}
@@ -29,13 +30,17 @@ ${data.content}`;
 
 function gitCommit(filePath: string, message: string): void {
   try {
-    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: 'pipe' });
+    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: "pipe" });
     execSync(`git commit -m "${message.replace(/"/g, '\\"')}"`, {
       cwd: process.cwd(),
-      stdio: 'pipe',
+      stdio: "pipe",
     });
     try {
-      execSync('git push', { cwd: process.cwd(), stdio: 'pipe', timeout: 10000 });
+      execSync("git push", {
+        cwd: process.cwd(),
+        stdio: "pipe",
+        timeout: 10000,
+      });
     } catch {}
   } catch {}
 }
@@ -44,16 +49,16 @@ function gitCommit(filePath: string, message: string): void {
  * GET /api/docs — list all docs with metadata
  */
 export async function GET() {
-  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.mdx'));
+  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"));
 
   const docs = files.map((file) => {
-    const fileContent = fs.readFileSync(path.join(CONTENT_DIR, file), 'utf-8');
+    const fileContent = fs.readFileSync(path.join(CONTENT_DIR, file), "utf-8");
     const { data } = matter(fileContent);
     return {
-      slug: file.replace(/\.mdx$/, ''),
+      slug: file.replace(/\.mdx$/, ""),
       title: data.title || file,
-      section: data.section || 'Uncategorized',
-      sectionOrder: data.sectionOrder ?? data['section-order'] ?? 0,
+      section: data.section || "Uncategorized",
+      sectionOrder: data.sectionOrder ?? data["section-order"] ?? 0,
       order: data.order ?? 0,
     };
   });
@@ -69,20 +74,20 @@ export async function POST(request: NextRequest) {
 
   if (!body.title || !body.content || !body.slug) {
     return NextResponse.json(
-      { error: 'Title, slug, and content are required' },
-      { status: 400 }
+      { error: "Title, slug, and content are required" },
+      { status: 400 },
     );
   }
 
   // Sanitize slug
   const slug = body.slug
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 
   if (!slug) {
-    return NextResponse.json({ error: 'Invalid slug' }, { status: 400 });
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
@@ -90,30 +95,31 @@ export async function POST(request: NextRequest) {
   if (fs.existsSync(filePath)) {
     return NextResponse.json(
       { error: `Page "${slug}" already exists` },
-      { status: 409 }
+      { status: 409 },
     );
   }
 
   const mdxContent = buildMdxFile({
     title: body.title,
-    section: body.section || 'Uncategorized',
+    section: body.section || "Uncategorized",
     sectionOrder: body.sectionOrder,
     order: body.order ?? 0,
     slug,
     content: body.content,
   });
 
-  fs.writeFileSync(filePath, mdxContent, 'utf-8');
+  fs.writeFileSync(filePath, mdxContent, "utf-8");
 
   // Bump version
   const ver = bumpVersion();
 
   // Git commit
-  const commitMsg = body.commitMessage || `docs: create ${slug} (v${ver.version})`;
+  const commitMsg =
+    body.commitMessage || `docs: create ${slug} (v${ver.version})`;
   gitCommit(filePath, commitMsg);
 
   // Revalidate
-  revalidatePath('/docs');
+  revalidatePath("/docs");
 
   return NextResponse.json({ success: true, slug }, { status: 201 });
 }

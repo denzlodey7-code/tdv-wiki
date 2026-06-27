@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { execSync } from 'child_process';
-import { revalidatePath } from 'next/cache';
-import { bumpVersion } from '@/lib/version';
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { execSync } from "child_process";
+import { revalidatePath } from "next/cache";
+import { bumpVersion } from "@/lib/version";
 
-const CONTENT_DIR = path.join(process.cwd(), 'docs');
+const CONTENT_DIR = path.join(process.cwd(), "docs");
 
 interface DocBody {
   title: string;
@@ -18,8 +18,9 @@ interface DocBody {
   commitMessage?: string;
 }
 
-function buildMdxFile(data: Omit<DocBody, 'commitMessage'>): string {
-  const sectionOrderLine = data.sectionOrder != null ? `\nsectionOrder: ${data.sectionOrder}` : '';
+function buildMdxFile(data: Omit<DocBody, "commitMessage">): string {
+  const sectionOrderLine =
+    data.sectionOrder != null ? `\nsectionOrder: ${data.sectionOrder}` : "";
   return `---
 title: "${data.title.replace(/"/g, '\\"')}"
 section: "${data.section.replace(/"/g, '\\"')}"${sectionOrderLine}
@@ -32,14 +33,18 @@ ${data.content}`;
 
 function gitCommit(filePath: string, message: string): void {
   try {
-    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: 'pipe' });
+    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: "pipe" });
     execSync(`git commit -m "${message.replace(/"/g, '\\"')}"`, {
       cwd: process.cwd(),
-      stdio: 'pipe',
+      stdio: "pipe",
     });
     // Try to push, but don't fail if it doesn't work
     try {
-      execSync('git push', { cwd: process.cwd(), stdio: 'pipe', timeout: 10000 });
+      execSync("git push", {
+        cwd: process.cwd(),
+        stdio: "pipe",
+        timeout: 10000,
+      });
     } catch {
       // Push failed silently — commit is local
     }
@@ -53,16 +58,16 @@ function gitCommit(filePath: string, message: string): void {
  */
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
 
   if (!fs.existsSync(filePath)) {
-    return NextResponse.json({ error: 'Page not found' }, { status: 404 });
+    return NextResponse.json({ error: "Page not found" }, { status: 404 });
   }
 
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
 
   return NextResponse.json({
@@ -76,37 +81,38 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   const body: DocBody = await request.json();
 
   if (!body.title || !body.content) {
     return NextResponse.json(
-      { error: 'Title and content are required' },
-      { status: 400 }
+      { error: "Title and content are required" },
+      { status: 400 },
     );
   }
 
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
 
   if (!fs.existsSync(filePath)) {
-    return NextResponse.json({ error: 'Page not found' }, { status: 404 });
+    return NextResponse.json({ error: "Page not found" }, { status: 404 });
   }
 
   const mdxContent = buildMdxFile(body);
-  fs.writeFileSync(filePath, mdxContent, 'utf-8');
+  fs.writeFileSync(filePath, mdxContent, "utf-8");
 
   // Bump version
   const ver = bumpVersion();
 
   // Git commit
-  const commitMsg = body.commitMessage || `docs: update ${slug} (v${ver.version})`;
+  const commitMsg =
+    body.commitMessage || `docs: update ${slug} (v${ver.version})`;
   gitCommit(filePath, commitMsg);
 
   // Revalidate cache
   revalidatePath(`/docs/${slug}`);
-  revalidatePath('/docs');
+  revalidatePath("/docs");
 
   return NextResponse.json({ success: true, slug });
 }
@@ -116,13 +122,13 @@ export async function PUT(
  */
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
 
   if (!fs.existsSync(filePath)) {
-    return NextResponse.json({ error: 'Page not found' }, { status: 404 });
+    return NextResponse.json({ error: "Page not found" }, { status: 404 });
   }
 
   fs.unlinkSync(filePath);
@@ -132,17 +138,21 @@ export async function DELETE(
 
   // Git commit
   try {
-    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: 'pipe' });
+    execSync(`git add "${filePath}"`, { cwd: process.cwd(), stdio: "pipe" });
     execSync(`git commit -m "docs: delete ${slug} (v${ver.version})"`, {
       cwd: process.cwd(),
-      stdio: 'pipe',
+      stdio: "pipe",
     });
     try {
-      execSync('git push', { cwd: process.cwd(), stdio: 'pipe', timeout: 10000 });
+      execSync("git push", {
+        cwd: process.cwd(),
+        stdio: "pipe",
+        timeout: 10000,
+      });
     } catch {}
   } catch {}
 
-  revalidatePath('/docs');
+  revalidatePath("/docs");
 
   return NextResponse.json({ success: true });
 }

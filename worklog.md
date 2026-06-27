@@ -1,11 +1,13 @@
 # Worklog — StsDev-Wiki
 
 ---
+
 Task ID: 1
 Agent: main
 Task: Sidebar truncate → break-words, Anti-Monolith ESLint rules, full audit & decomposition, SKILL-zai-sandbox-rules, Superpowers-Z.ai submodule, PNG cleanup, fab-inspector install, push
 
 Work Log:
+
 - Replaced `truncate` with `break-words` in sidebar spans for line wrapping
 - Created `eslint-rules/anti-monolith.js` with 4 custom rules (max-file-lines 250, max-component-lines 200, max-use-state 2, max-function-lines 50)
 - Fixed ESLint 9 flat config crash: comma-separated selectors → dynamic visitors object
@@ -27,6 +29,7 @@ Work Log:
 - Force-pushed to remote (token from upload/StsDev-Wiki-Template.txt, remote had been force-pushed previously)
 
 Stage Summary:
+
 - ESLint audit: 13 issues → 0 errors, 0 warnings in prod code
 - All files under ZAI-ARCH-002 thresholds
 - FabInspector FAB button integrated (bottom-right, Esc to close)
@@ -34,11 +37,13 @@ Stage Summary:
 - Pending: GitHub token rotation (expires periodically)
 
 ---
+
 Task ID: 2
 Agent: main
 Task: Move docs/ to project root, fix Vercel deployments, add tests, fix CONTENT_DIR across codebase
 
 Work Log:
+
 - Moved `src/content/docs/` → `docs/` (project root) for accessibility
 - Updated CONTENT_DIR in: mdx-utils.ts, reorder-section/route.ts, docs/route.ts, docs/[slug]/route.ts
 - Removed empty `src/content/` directory
@@ -55,6 +60,7 @@ Work Log:
 - Remaining warnings (non-blocking): middleware deprecated → proxy, vercel transitive dep
 
 Stage Summary:
+
 - docs/ at project root — non-technical users can find content
 - 3 new test files, 47 new tests — full coverage of content layer
 - 4 API route files + 3 test files had hardcoded `src/content/docs` — all fixed

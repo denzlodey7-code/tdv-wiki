@@ -40,7 +40,10 @@ module.exports = {
 
         return {
           Literal(node) {
-            if (typeof node.value === "string" && emojiPattern.test(node.value)) {
+            if (
+              typeof node.value === "string" &&
+              emojiPattern.test(node.value)
+            ) {
               context.report({ node, messageId: "emojiInLiteral" });
             }
           },
@@ -106,7 +109,10 @@ module.exports = {
                 quasi.value.cooked &&
                 unicodeGraphicsPattern.test(quasi.value.cooked)
               ) {
-                context.report({ node, messageId: "unicodeGraphicsInTemplate" });
+                context.report({
+                  node,
+                  messageId: "unicodeGraphicsInTemplate",
+                });
                 break;
               }
             }
@@ -143,14 +149,10 @@ module.exports = {
 
         return {
           Program(node) {
-            const sourceCode =
-              context.sourceCode || context.getSourceCode();
+            const sourceCode = context.sourceCode || context.getSourceCode();
             const text = sourceCode.getText();
 
-            const textWithoutCodeBlocks = text.replace(
-              /```[\s\S]*?```/g,
-              ""
-            );
+            const textWithoutCodeBlocks = text.replace(/```[\s\S]*?```/g, "");
 
             const lines = textWithoutCodeBlocks.split("\n");
             lines.forEach((line, index) => {
@@ -189,14 +191,10 @@ module.exports = {
 
         return {
           Program(node) {
-            const sourceCode =
-              context.sourceCode || context.getSourceCode();
+            const sourceCode = context.sourceCode || context.getSourceCode();
             const text = sourceCode.getText();
 
-            const textWithoutCodeBlocks = text.replace(
-              /```[\s\S]*?```/g,
-              ""
-            );
+            const textWithoutCodeBlocks = text.replace(/```[\s\S]*?```/g, "");
 
             const lines = textWithoutCodeBlocks.split("\n");
             lines.forEach((line, index) => {

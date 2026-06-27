@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import {
   headingsPlugin,
   listsPlugin,
@@ -27,26 +27,26 @@ import {
   DiffSourceToggleWrapper,
   UndoRedo,
   Separator,
-} from '@mdxeditor/editor';
+} from "@mdxeditor/editor";
 
 export const CODE_BLOCK_LANGUAGES: Record<string, string> = {
-  js: 'JavaScript',
-  ts: 'TypeScript',
-  tsx: 'TypeScript (React)',
-  jsx: 'JavaScript (React)',
-  python: 'Python',
-  css: 'CSS',
-  html: 'HTML',
-  bash: 'Bash',
-  shell: 'Shell',
-  json: 'JSON',
-  yaml: 'YAML',
-  markdown: 'Markdown',
-  sql: 'SQL',
-  rust: 'Rust',
-  go: 'Go',
-  java: 'Java',
-  mermaid: 'Mermaid',
+  js: "JavaScript",
+  ts: "TypeScript",
+  tsx: "TypeScript (React)",
+  jsx: "JavaScript (React)",
+  python: "Python",
+  css: "CSS",
+  html: "HTML",
+  bash: "Bash",
+  shell: "Shell",
+  json: "JSON",
+  yaml: "YAML",
+  markdown: "Markdown",
+  sql: "SQL",
+  rust: "Rust",
+  go: "Go",
+  java: "Java",
+  mermaid: "Mermaid",
 };
 
 export function EditorToolbar({
@@ -96,8 +96,8 @@ export function getEditorPlugins(options?: {
     }),
     ...(options?.withFrontmatter ? [frontmatterPlugin()] : []),
     diffSourcePlugin({
-      viewMode: 'rich-text',
-      diffMarkdown: options?.markdown || '',
+      viewMode: "rich-text",
+      diffMarkdown: options?.markdown || "",
     }),
     toolbarPlugin({
       toolbarContents: () => (

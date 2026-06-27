@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTheme } from 'next-themes';
-import { Moon, Sun } from 'lucide-react';
+import React from "react";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -13,24 +13,24 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="p-2 rounded-lg hover:bg-muted transition-colors"
+        className="hover:bg-muted rounded-lg p-2 transition-colors"
         aria-label="Переключить тему"
       >
-        <Sun className="h-4 w-4 text-muted-foreground" />
+        <Sun className="text-muted-foreground h-4 w-4" />
       </button>
     );
   }
 
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-lg hover:bg-muted transition-colors"
-      aria-label={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="hover:bg-muted rounded-lg p-2 transition-colors"
+      aria-label={theme === "dark" ? "Светлая тема" : "Тёмная тема"}
     >
-      {theme === 'dark' ? (
-        <Sun className="h-4 w-4 text-muted-foreground" />
+      {theme === "dark" ? (
+        <Sun className="text-muted-foreground h-4 w-4" />
       ) : (
-        <Moon className="h-4 w-4 text-muted-foreground" />
+        <Moon className="text-muted-foreground h-4 w-4" />
       )}
     </button>
   );

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Header from '@/components/docs/header';
-import Sidebar from '@/components/docs/sidebar';
-import TOC from '@/components/docs/toc';
-import SearchDialog from '@/components/docs/search-dialog';
-import { ChevronLeft, ChevronRight, ArrowUp } from 'lucide-react';
-import type { NavSection, Heading } from '@/lib/mdx-utils';
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Header from "@/components/docs/header";
+import Sidebar from "@/components/docs/sidebar";
+import TOC from "@/components/docs/toc";
+import SearchDialog from "@/components/docs/search-dialog";
+import { ChevronLeft, ChevronRight, ArrowUp } from "lucide-react";
+import type { NavSection, Heading } from "@/lib/mdx-utils";
 
-const WIKI_SECTION = 'О Sts Wiki';
+const WIKI_SECTION = "О Sts Wiki";
 
 interface AdjacentPages {
   prev?: { slug: string; title: string };
@@ -39,13 +39,13 @@ function useDocsShellUI() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setSearchOpen(true);
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return {
@@ -69,17 +69,18 @@ export default function DocsShell({
   build,
 }: DocsShellProps) {
   const router = useRouter();
-  const [activeHeading, setActiveHeading] = useState('');
+  const [activeHeading, setActiveHeading] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { searchOpen, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } = useDocsShellUI();
+  const { searchOpen, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } =
+    useDocsShellUI();
 
   const handleNavigate = useCallback(
     (targetSlug: string) => {
       router.push(`/docs/${targetSlug}/`);
       setMobileMenuOpen(false);
     },
-    [router, setMobileMenuOpen]
+    [router, setMobileMenuOpen],
   );
 
   // Track active heading on scroll
@@ -92,7 +93,7 @@ export default function DocsShell({
           }
         }
       },
-      { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+      { rootMargin: "-80px 0px -70% 0px", threshold: 0 },
     );
 
     const timer = setTimeout(() => {
@@ -119,12 +120,12 @@ export default function DocsShell({
   // Scroll-to-top visibility
   useEffect(() => {
     const handleScroll = () => setShowScrollTop(window.scrollY > 400);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="bg-background text-foreground min-h-screen">
       <Header
         onSearchOpen={() => setSearchOpen(true)}
         onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -151,21 +152,26 @@ export default function DocsShell({
         />
 
         {/* Content — golden section (1.618fr) */}
-        <main className="min-w-0 flex flex-col">
+        <main className="flex min-w-0 flex-col">
           <div
             ref={contentRef}
-            className="px-6 xl:px-10 py-8 xl:py-12"
-            style={{ gap: 'var(--fib-3)' }}
+            className="px-6 py-8 xl:px-10 xl:py-12"
+            style={{ gap: "var(--fib-3)" }}
           >
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-[var(--text-sm)] text-foreground/60 mb-6">
-              <Link href="/docs/" className="hover:text-foreground transition-colors">Docs</Link>
+            <div className="text-foreground/60 mb-6 flex items-center gap-2 text-[var(--text-sm)]">
+              <Link
+                href="/docs/"
+                className="hover:text-foreground transition-colors"
+              >
+                Docs
+              </Link>
               <span>/</span>
               <span>{section}</span>
             </div>
 
             {/* Page Title */}
-            <h1 className="text-[var(--text-3xl)] font-medium leading-tight text-foreground mb-4">
+            <h1 className="text-foreground mb-4 leading-tight font-medium text-[var(--text-3xl)]">
               {title}
             </h1>
 
@@ -174,19 +180,19 @@ export default function DocsShell({
           </div>
 
           {/* Navigation — full width of main, pushed to bottom via mt-auto */}
-          <div className="px-6 xl:px-10 py-6 border-t border-border mt-auto">
+          <div className="border-border mt-auto border-t px-6 py-6 xl:px-10">
             <div className="grid grid-cols-2 gap-4">
               {adjacent.prev ? (
                 <button
                   onClick={() => handleNavigate(adjacent.prev!.slug)}
-                  className="group flex items-start gap-2 p-4 rounded-lg border border-border hover:border-ring transition-colors text-left hover:bg-muted/50"
+                  className="group border-border hover:border-ring hover:bg-muted/50 flex items-start gap-2 rounded-lg border p-4 text-left transition-colors"
                 >
-                  <ChevronLeft className="h-4 w-4 mt-0.5 text-muted-foreground group-hover:text-foreground shrink-0" />
+                  <ChevronLeft className="text-muted-foreground group-hover:text-foreground mt-0.5 h-4 w-4 shrink-0" />
                   <div>
-                    <div className="text-[var(--text-xs)] text-muted-foreground mb-1">
+                    <div className="text-muted-foreground mb-1 text-[var(--text-xs)]">
                       Назад
                     </div>
-                    <div className="text-[var(--text-base)] text-foreground/80 group-hover:text-foreground">
+                    <div className="text-foreground/80 group-hover:text-foreground text-[var(--text-base)]">
                       {adjacent.prev.title}
                     </div>
                   </div>
@@ -197,17 +203,17 @@ export default function DocsShell({
               {adjacent.next ? (
                 <button
                   onClick={() => handleNavigate(adjacent.next!.slug)}
-                  className="group flex items-start gap-2 p-4 rounded-lg border border-border hover:border-ring transition-colors text-left justify-end hover:bg-muted/50"
+                  className="group border-border hover:border-ring hover:bg-muted/50 flex items-start justify-end gap-2 rounded-lg border p-4 text-left transition-colors"
                 >
                   <div className="text-right">
-                    <div className="text-[var(--text-xs)] text-muted-foreground mb-1">
+                    <div className="text-muted-foreground mb-1 text-[var(--text-xs)]">
                       Далее
                     </div>
-                    <div className="text-[var(--text-base)] text-foreground/80 group-hover:text-foreground">
+                    <div className="text-foreground/80 group-hover:text-foreground text-[var(--text-base)]">
                       {adjacent.next.title}
                     </div>
                   </div>
-                  <ChevronRight className="h-4 w-4 mt-0.5 text-muted-foreground group-hover:text-foreground shrink-0" />
+                  <ChevronRight className="text-muted-foreground group-hover:text-foreground mt-0.5 h-4 w-4 shrink-0" />
                 </button>
               ) : (
                 <div />
@@ -230,8 +236,8 @@ export default function DocsShell({
       {/* Scroll to top */}
       {showScrollTop && (
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 right-6 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-muted border border-border text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors shadow-lg"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="bg-muted border-border text-muted-foreground hover:text-foreground hover:bg-muted/80 fixed right-6 bottom-6 z-20 flex h-9 w-9 items-center justify-center rounded-full border shadow-lg transition-colors"
           aria-label="Наверх"
         >
           <ArrowUp className="h-4 w-4" />

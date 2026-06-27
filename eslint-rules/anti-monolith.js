@@ -45,8 +45,8 @@ module.exports = {
       create(context) {
         const options = context.options[0] || {};
         const max = options.max || 250;
-        const excludePatterns = (options.exclude || []).map((p) =>
-          new RegExp(p)
+        const excludePatterns = (options.exclude || []).map(
+          (p) => new RegExp(p),
         );
         const filename = context.filename || context.getFilename();
 
@@ -57,8 +57,7 @@ module.exports = {
 
         return {
           Program(node) {
-            const sourceCode =
-              context.sourceCode || context.getSourceCode();
+            const sourceCode = context.sourceCode || context.getSourceCode();
             const lines = sourceCode.getLines();
             const actual = lines.length;
 
@@ -104,7 +103,11 @@ module.exports = {
         const max = (context.options[0] || {}).max || 200;
 
         function isComponent(node) {
-          if (node.type !== "FunctionDeclaration" && node.type !== "FunctionExpression" && node.type !== "ArrowFunctionExpression") {
+          if (
+            node.type !== "FunctionDeclaration" &&
+            node.type !== "FunctionExpression" &&
+            node.type !== "ArrowFunctionExpression"
+          ) {
             return false;
           }
           const name =
@@ -134,10 +137,7 @@ module.exports = {
 
         return {
           ExportDefaultDeclaration(node) {
-            if (
-              node.declaration &&
-              isComponent(node.declaration)
-            ) {
+            if (node.declaration && isComponent(node.declaration)) {
               const size = getComponentSize(node.declaration);
               const name = getComponentName(node.declaration);
               if (size > max) {
@@ -151,8 +151,7 @@ module.exports = {
           },
           ExportNamedDeclaration(node) {
             if (node.declaration) {
-              const decls =
-                node.declaration.declarations || [node.declaration];
+              const decls = node.declaration.declarations || [node.declaration];
               for (const decl of decls) {
                 const fn = decl.init || decl;
                 if (isComponent(fn)) {
@@ -204,7 +203,11 @@ module.exports = {
         let currentComponent = null;
 
         function isComponentNode(node) {
-          if (node.type !== "FunctionDeclaration" && node.type !== "FunctionExpression" && node.type !== "ArrowFunctionExpression") {
+          if (
+            node.type !== "FunctionDeclaration" &&
+            node.type !== "FunctionExpression" &&
+            node.type !== "ArrowFunctionExpression"
+          ) {
             return false;
           }
           const name =
@@ -225,13 +228,21 @@ module.exports = {
           );
         }
 
-        const functionTypes = ["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"];
+        const functionTypes = [
+          "FunctionDeclaration",
+          "FunctionExpression",
+          "ArrowFunctionExpression",
+        ];
         const visitors = {};
 
         for (const fnType of functionTypes) {
           visitors[fnType] = (node) => {
             if (isComponentNode(node)) {
-              currentComponent = { node, name: getComponentName(node), useStateCount: 0 };
+              currentComponent = {
+                node,
+                name: getComponentName(node),
+                useStateCount: 0,
+              };
             }
           };
           visitors[fnType + ":exit"] = (node) => {
@@ -253,14 +264,14 @@ module.exports = {
         }
 
         visitors.CallExpression = (node) => {
-            if (
-              currentComponent &&
-              node.callee.type === "Identifier" &&
-              node.callee.name === "useState"
-            ) {
-              currentComponent.useStateCount++;
-            }
-          };
+          if (
+            currentComponent &&
+            node.callee.type === "Identifier" &&
+            node.callee.name === "useState"
+          ) {
+            currentComponent.useStateCount++;
+          }
+        };
 
         return visitors;
       },

@@ -1,4 +1,4 @@
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export interface DocData {
   meta: {
@@ -27,14 +27,17 @@ type ActionResult = ActionSuccess | ActionError;
  */
 export async function deleteDoc(slug: string): Promise<ActionResult> {
   try {
-    const res = await fetch(`/api/docs/${slug}`, { method: 'DELETE' });
+    const res = await fetch(`/api/docs/${slug}`, { method: "DELETE" });
     if (!res.ok) {
       const data = await res.json();
-      throw new Error(data.error || 'Delete failed');
+      throw new Error(data.error || "Delete failed");
     }
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: err instanceof Error ? err.message : 'Ошибка удаления' };
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Ошибка удаления",
+    };
   }
 }
 
@@ -48,8 +51,8 @@ export async function saveDoc(
 ): Promise<ActionResult> {
   try {
     const res = await fetch(`/api/docs/${slug}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...doc.meta,
         content: doc.content,
@@ -59,12 +62,15 @@ export async function saveDoc(
 
     if (!res.ok) {
       const data = await res.json();
-      throw new Error(data.error || 'Save failed');
+      throw new Error(data.error || "Save failed");
     }
 
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: err instanceof Error ? err.message : 'Ошибка сохранения' };
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Ошибка сохранения",
+    };
   }
 }
 
@@ -82,12 +88,12 @@ export async function createDoc(
   content: string,
 ): Promise<CreateDocResult> {
   try {
-    const res = await fetch('/api/docs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/docs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title,
-        section: section || 'Uncategorized',
+        section: section || "Uncategorized",
         sectionOrder: sectionOrder ? parseInt(sectionOrder) : undefined,
         order: order ? parseInt(order) : 0,
         slug,
@@ -98,12 +104,15 @@ export async function createDoc(
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || 'Create failed');
+      throw new Error(data.error || "Create failed");
     }
 
     return { success: true, slug: data.slug };
   } catch (err: unknown) {
-    return { success: false, error: err instanceof Error ? err.message : 'Ошибка создания' };
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Ошибка создания",
+    };
   }
 }
 
@@ -118,21 +127,21 @@ export async function uploadDocs(
 ): Promise<UploadDocsResult> {
   try {
     const formData = new FormData();
-    formData.append('section', section || 'Uploaded');
+    formData.append("section", section || "Uploaded");
 
     for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i]);
+      formData.append("files", files[i]);
     }
 
-    const res = await fetch('/api/docs/upload', {
-      method: 'POST',
+    const res = await fetch("/api/docs/upload", {
+      method: "POST",
       body: formData,
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || 'Upload failed');
+      throw new Error(data.error || "Upload failed");
     }
 
     // Navigate to the first uploaded file
@@ -142,7 +151,10 @@ export async function uploadDocs(
 
     return { success: true };
   } catch (err: unknown) {
-    return { success: false, error: err instanceof Error ? err.message : 'Ошибка загрузки' };
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Ошибка загрузки",
+    };
   }
 }
 

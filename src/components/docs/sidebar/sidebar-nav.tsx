@@ -1,8 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ChevronDown, ChevronRight, Plus, Trash2, FolderPlus, ArrowUp, ArrowDown } from 'lucide-react';
-import type { NavSection } from '@/lib/mdx-utils';
+import React from "react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Plus,
+  Trash2,
+  FolderPlus,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import type { NavSection } from "@/lib/mdx-utils";
 
 interface SidebarNavProps {
   navigation: NavSection[];
@@ -12,7 +20,7 @@ interface SidebarNavProps {
   onToggleSection: (title: string) => void;
   onNavigate: (slug: string) => void;
   onDelete: (slug: string, title: string) => void;
-  onMoveSection: (sectionTitle: string, direction: 'up' | 'down') => void;
+  onMoveSection: (sectionTitle: string, direction: "up" | "down") => void;
   onCreateInSection: (sectionTitle: string) => void;
   onNewSectionClick: () => void;
   moving: string | null;
@@ -32,8 +40,8 @@ export default function SidebarNav({
   moving,
 }: SidebarNavProps) {
   return (
-    <nav className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto py-4 px-3 scrollbar-thin">
+    <nav className="flex h-full flex-col">
+      <div className="flex-1 scrollbar-thin overflow-y-auto px-3 py-4">
         {navigation.map((section, sectionIdx) => {
           const isSectionOpen = openSections.has(section.title);
           const isActive = section.items.some((i) => i.slug === currentSlug);
@@ -43,40 +51,41 @@ export default function SidebarNav({
               <div className="flex items-center">
                 <button
                   onClick={() => onToggleSection(section.title)}
-                  className={`flex items-center flex-1 min-w-0 px-2 py-1.5 text-[var(--text-sm)] font-medium rounded-md transition-colors text-left ${
-                    isActive
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
+                  className={`flex min-w-0 flex-1 items-center rounded-md px-2 py-1.5 text-left font-medium text-[var(--text-sm)] transition-colors ${
+                    isActive ? "text-foreground" : "text-muted-foreground"
                   } hover:text-foreground`}
                 >
                   {isSectionOpen ? (
-                    <ChevronDown className="h-3 w-3 mr-1.5 shrink-0" />
+                    <ChevronDown className="mr-1.5 h-3 w-3 shrink-0" />
                   ) : (
-                    <ChevronRight className="h-3 w-3 mr-1.5 shrink-0" />
+                    <ChevronRight className="mr-1.5 h-3 w-3 shrink-0" />
                   )}
                   <span className="break-words">{section.title}</span>
                 </button>
                 {canEdit && (
-                  <div className="flex items-center shrink-0">
+                  <div className="flex shrink-0 items-center">
                     <button
-                      onClick={() => onMoveSection(section.title, 'up')}
+                      onClick={() => onMoveSection(section.title, "up")}
                       disabled={sectionIdx === 0 || moving === section.title}
-                      className="p-0.5 rounded text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 transition-colors disabled:opacity-20 disabled:hover:text-muted-foreground/0 disabled:hover:bg-transparent"
+                      className="text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 disabled:hover:text-muted-foreground/0 rounded p-0.5 transition-colors disabled:opacity-20 disabled:hover:bg-transparent"
                       title="Секцию выше"
                     >
                       <ArrowUp className="h-3 w-3" />
                     </button>
                     <button
-                      onClick={() => onMoveSection(section.title, 'down')}
-                      disabled={sectionIdx === navigation.length - 1 || moving === section.title}
-                      className="p-0.5 rounded text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 transition-colors disabled:opacity-20 disabled:hover:text-muted-foreground/0 disabled:hover:bg-transparent"
+                      onClick={() => onMoveSection(section.title, "down")}
+                      disabled={
+                        sectionIdx === navigation.length - 1 ||
+                        moving === section.title
+                      }
+                      className="text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 disabled:hover:text-muted-foreground/0 rounded p-0.5 transition-colors disabled:opacity-20 disabled:hover:bg-transparent"
                       title="Секцию ниже"
                     >
                       <ArrowDown className="h-3 w-3" />
                     </button>
                     <button
                       onClick={() => onCreateInSection(section.title)}
-                      className="p-1 rounded text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 transition-colors"
+                      className="text-muted-foreground/0 hover:text-muted-foreground hover:bg-muted/50 rounded p-1 transition-colors"
                       title={`Добавить страницу в "${section.title}"`}
                     >
                       <Plus className="h-3 w-3" />
@@ -85,7 +94,7 @@ export default function SidebarNav({
                 )}
               </div>
               {isSectionOpen && (
-                <div className="ml-4 mt-0.5 space-y-0.5">
+                <div className="mt-0.5 ml-4 space-y-0.5">
                   {section.items.map((item) => (
                     <div
                       key={item.slug}
@@ -93,10 +102,10 @@ export default function SidebarNav({
                     >
                       <button
                         onClick={() => onNavigate(item.slug)}
-                        className={`flex-1 min-w-0 text-left px-2.5 py-1.5 text-[var(--text-sm)] rounded-md transition-all break-words ${
+                        className={`min-w-0 flex-1 rounded-md px-2.5 py-1.5 text-left break-words text-[var(--text-sm)] transition-all ${
                           currentSlug === item.slug
-                            ? 'bg-muted text-foreground font-medium'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                            ? "bg-muted text-foreground font-medium"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         }`}
                       >
                         <span className="break-words">{item.title}</span>
@@ -107,7 +116,7 @@ export default function SidebarNav({
                             e.stopPropagation();
                             onDelete(item.slug, item.title);
                           }}
-                          className="p-1 mr-0.5 rounded text-muted-foreground/0 group-hover/item:text-muted-foreground/60 hover:!text-red-500 hover:bg-red-500/10 transition-colors shrink-0"
+                          className="text-muted-foreground/0 group-hover/item:text-muted-foreground/60 mr-0.5 shrink-0 rounded p-1 transition-colors hover:bg-red-500/10 hover:!text-red-500"
                           title={`Удалить "${item.title}"`}
                         >
                           <Trash2 className="h-3 w-3" />
@@ -121,10 +130,10 @@ export default function SidebarNav({
           );
         })}
         {canEdit && (
-          <div className="mt-2 pt-2 border-t border-border">
+          <div className="border-border mt-2 border-t pt-2">
             <button
               onClick={onNewSectionClick}
-              className="flex items-center gap-2 w-full px-2 py-1.5 text-[var(--text-sm)] text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/50 transition-colors"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[var(--text-sm)] transition-colors"
             >
               <FolderPlus className="h-3.5 w-3.5" />
               <span>Новая секция</span>

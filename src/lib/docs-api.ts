@@ -3,9 +3,9 @@ export async function createSectionDoc(
   sectionOrder: number,
   slug: string,
 ) {
-  const res = await fetch('/api/docs', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const res = await fetch("/api/docs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       title,
       section: title,
@@ -17,7 +17,7 @@ export async function createSectionDoc(
   });
   if (!res.ok) {
     const data = await res.json();
-    throw new Error(data.error || 'Create failed');
+    throw new Error(data.error || "Create failed");
   }
   return res.json();
 }
@@ -32,13 +32,13 @@ export async function reorderExistingSections(
       reorderSections[key] = val;
     }
   }
-  const res = await fetch('/api/docs/reorder-section', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+  const res = await fetch("/api/docs/reorder-section", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sections: reorderSections }),
   });
   if (!res.ok) {
     const data = await res.json();
-    throw new Error(data.error || 'Reorder failed');
+    throw new Error(data.error || "Reorder failed");
   }
 }

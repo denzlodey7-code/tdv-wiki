@@ -94,19 +94,19 @@
 .dark {
   /* Core surface tokens — dark-zai palette */
   --background: #0a0a0f;
-  --foreground: #E6E6E6;
+  --foreground: #e6e6e6;
   --card: #15151f;
-  --card-foreground: #E6E6E6;
+  --card-foreground: #e6e6e6;
   --popover: #15151f;
-  --popover-foreground: #E6E6E6;
-  --primary: #E6E6E6;
+  --popover-foreground: #e6e6e6;
+  --primary: #e6e6e6;
   --primary-foreground: #0a0a0f;
   --secondary: #1a1a2a;
-  --secondary-foreground: #E6E6E6;
+  --secondary-foreground: #e6e6e6;
   --muted: #1a1a2a;
   --muted-foreground: #878992;
   --accent: #1a1a2a;
-  --accent-foreground: #E6E6E6;
+  --accent-foreground: #e6e6e6;
   --destructive: oklch(0.704 0.191 22.216);
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.12);
@@ -121,11 +121,11 @@
 
   /* Sidebar — dark-zai variant */
   --sidebar: #0d0d14;
-  --sidebar-foreground: #E6E6E6;
+  --sidebar-foreground: #e6e6e6;
   --sidebar-primary: #7dd3fc;
   --sidebar-primary-foreground: #0a0a0f;
   --sidebar-accent: #1a1a2a;
-  --sidebar-accent-foreground: #E6E6E6;
+  --sidebar-accent-foreground: #e6e6e6;
   --sidebar-border: rgba(255, 255, 255, 0.06);
   --sidebar-ring: #878992;
 
@@ -141,13 +141,13 @@
   --phi: 1.6180339887;
 
   /* Fibonacci spacing scale (base: 8px) */
-  --fib-1: 0.5rem;    /* 8px  */
-  --fib-2: 0.75rem;   /* 12px */
-  --fib-3: 1.5rem;    /* 24px */
-  --fib-4: 2.5rem;    /* 40px */
-  --fib-5: 4rem;      /* 64px */
-  --fib-6: 6.5rem;    /* 104px */
-  --fib-7: 10.5rem;   /* 168px */
+  --fib-1: 0.5rem; /* 8px  */
+  --fib-2: 0.75rem; /* 12px */
+  --fib-3: 1.5rem; /* 24px */
+  --fib-4: 2.5rem; /* 40px */
+  --fib-5: 4rem; /* 64px */
+  --fib-6: 6.5rem; /* 104px */
+  --fib-7: 10.5rem; /* 168px */
 
   /* Type scale (px-based, aligned with Fibonacci spacing) */
   --text-xs: 12px;
@@ -160,10 +160,10 @@
   --text-3xl: 32px;
 
   /* Grid gap tokens */
-  --zai-gap-xs: 0.75rem;   /* 12px — tight, inside cards */
-  --zai-gap-sm: 1.5rem;    /* 24px — standard grid */
-  --zai-gap-md: 2.5rem;    /* 40px — section-level */
-  --zai-gap-lg: 4rem;      /* 64px — major divisions */
+  --zai-gap-xs: 0.75rem; /* 12px — tight, inside cards */
+  --zai-gap-sm: 1.5rem; /* 24px — standard grid */
+  --zai-gap-md: 2.5rem; /* 40px — section-level */
+  --zai-gap-lg: 4rem; /* 64px — major divisions */
 
   /* Motion tokens */
   --zai-duration-fast: 150ms;
@@ -173,19 +173,19 @@
   --zai-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Radius tokens (Fibonacci-scaled) */
-  --zai-radius-sm: 0.375rem;   /* 6px */
-  --zai-radius-md: 0.625rem;   /* 10px */
-  --zai-radius-lg: 0.75rem;    /* 12px */
-  --zai-radius-xl: 1rem;       /* 16px */
+  --zai-radius-sm: 0.375rem; /* 6px */
+  --zai-radius-md: 0.625rem; /* 10px */
+  --zai-radius-lg: 0.75rem; /* 12px */
+  --zai-radius-xl: 1rem; /* 16px */
 }
 
 /* ===== DARK-ZAI SPECIFIC TOKENS (active only in dark mode) ===== */
 .dark {
   /* Accent — cyan neon for code showcase */
-  --zai-color-accent: #7dd3fc;       /* sky-300 — primary neon accent */
+  --zai-color-accent: #7dd3fc; /* sky-300 — primary neon accent */
   --zai-color-accent-muted: #38bdf8; /* sky-400 */
-  --zai-neon-color: #22d3ee;         /* cyan-400 — glow source */
-  --zai-glow-color: 125, 211, 252;   /* RGB for rgba() glow */
+  --zai-neon-color: #22d3ee; /* cyan-400 — glow source */
+  --zai-glow-color: 125, 211, 252; /* RGB for rgba() glow */
 
   /* Shadow tokens */
   --zai-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -196,9 +196,9 @@
 
 /* Light mode zai tokens (muted, non-neon) */
 :root:not(.dark) {
-  --zai-color-accent: #0284c7;       /* sky-600 */
+  --zai-color-accent: #0284c7; /* sky-600 */
   --zai-color-accent-muted: #0369a1; /* sky-700 */
-  --zai-neon-color: #0ea5e9;         /* sky-500 */
+  --zai-neon-color: #0ea5e9; /* sky-500 */
   --zai-glow-color: 2, 132, 199;
 
   --zai-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
@@ -211,8 +211,12 @@
 
 /* Skeleton shimmer — loading state */
 @keyframes zai-skeleton-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Fade up — entrance animation */
@@ -248,8 +252,9 @@
 
 /* Card lift — hover interaction */
 .zai-card-lift {
-  transition: transform var(--zai-duration-fast) var(--zai-easing-default),
-              box-shadow var(--zai-duration-fast) var(--zai-easing-default);
+  transition:
+    transform var(--zai-duration-fast) var(--zai-easing-default),
+    box-shadow var(--zai-duration-fast) var(--zai-easing-default);
 }
 .zai-card-lift:hover {
   transform: translateY(-2px);

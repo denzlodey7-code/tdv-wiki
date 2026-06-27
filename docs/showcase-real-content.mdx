@@ -6,7 +6,6 @@ order: 1
 slug: "showcase-real-content"
 ---
 
-
 ## Зачем этот файл
 
 Этот файл — **верификация шаблона** реальным контентом из репозитория [StsDev-Wiki](https://github.com/stsgs1980/StsDev-Wiki). Каждая секция ниже содержит подлинный контент из базы знаний и проверяет конкретный элемент рендеринга.
@@ -17,7 +16,7 @@ slug: "showcase-real-content"
 
 ## Текст: параграфы, жирный, курсив, inline-код
 
-**Мы побеждаем если взялись.** Не "попробуем". Не "посмотрим что получится". *Взялись — довели до конца.* Это applies to every skill, every feature, every fix, every project. Done is better than perfect, but "almost done" is not done.
+**Мы побеждаем если взялись.** Не "попробуем". Не "посмотрим что получится". _Взялись — довели до конца._ Это applies to every skill, every feature, every fix, every project. Done is better than perfect, but "almost done" is not done.
 
 Инцидент 2026-05-30: отчёт "Комплексный анализ системы" по Zai-agent-toolkit содержал 10 "найденных" файлов. Ни один не существовал в репозитории. Точность: **0%**. Результат: ~1 потерянная неделя. Именно поэтому принцип `анти-галлюцинация` — вечный и не пересматривается.
 
@@ -49,25 +48,25 @@ slug: "showcase-real-content"
 
 ## Таблица: конкуренты
 
-| Конкурент | Что делают | Чего НЕ делают (наш шанс) |
-|-----------|-----------|---------------------------|
-| **Anthropic** | MCP protocol, Claude tool-use API, JSON Schema для tools | Нет skill-формата, нет quality scoring для toolkits |
+| Конкурент     | Что делают                                               | Чего НЕ делают (наш шанс)                                      |
+| ------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+| **Anthropic** | MCP protocol, Claude tool-use API, JSON Schema для tools | Нет skill-формата, нет quality scoring для toolkits            |
 | **LangChain** | Python tool wrappers, chain composition, @tool decorator | Нет skill-файлов, нет ID-системы, нет cross-reference checking |
-| **Dify** | Visual workflow builder, prebuilt agent templates, SaaS | Нет custom skill SDK, нет scanner/validator |
-| **n8n** | Workflow automation, 400+ integration nodes | Не agent-oriented, no skill ecosystem |
-| **Flowise** | No-code LLM flow builder, drag-and-drop | No code ownership, no skill management |
+| **Dify**      | Visual workflow builder, prebuilt agent templates, SaaS  | Нет custom skill SDK, нет scanner/validator                    |
+| **n8n**       | Workflow automation, 400+ integration nodes              | Не agent-oriented, no skill ecosystem                          |
+| **Flowise**   | No-code LLM flow builder, drag-and-drop                  | No code ownership, no skill management                         |
 
 ---
 
 ## Таблица: статусы экосистемы
 
-| Статус | Кол-во | Примеры |
-|--------|--------|---------|
-| ACTIVE | 8 | P-MAS-architector, 3A Studio, UI-Kit |
-| FROZEN | 1 | 3a-studio (остановлен 30.05.2026) |
-| NEW | 4 | Code-Realm, HH-Job-Copilot, CHROMEDNA |
-| REFERENCE | 1 | Zai-agent-toolkit (read-only) |
-| ARCHIVED | 3 | P-mas-studio, MVP-Flow-Studio-Pro |
+| Статус    | Кол-во | Примеры                               |
+| --------- | ------ | ------------------------------------- |
+| ACTIVE    | 8      | P-MAS-architector, 3A Studio, UI-Kit  |
+| FROZEN    | 1      | 3a-studio (остановлен 30.05.2026)     |
+| NEW       | 4      | Code-Realm, HH-Job-Copilot, CHROMEDNA |
+| REFERENCE | 1      | Zai-agent-toolkit (read-only)         |
+| ARCHIVED  | 3      | P-mas-studio, MVP-Flow-Studio-Pro     |
 
 ---
 
@@ -77,7 +76,7 @@ slug: "showcase-real-content"
 // S-04: React компоненты — стандарт экосистемы
 interface AgentNode {
   id: string;
-  role: 'orchestrator' | 'worker' | 'reviewer';
+  role: "orchestrator" | "worker" | "reviewer";
   skills: string[];
   parentId?: string;
   config: {
@@ -90,7 +89,7 @@ interface AgentNode {
 function buildAgentHierarchy(nodes: AgentNode[]): Map<string, AgentNode[]> {
   const hierarchy = new Map<string, AgentNode[]>();
   for (const node of nodes) {
-    const key = node.parentId || '__root__';
+    const key = node.parentId || "__root__";
     if (!hierarchy.has(key)) hierarchy.set(key, []);
     hierarchy.get(key)!.push(node);
   }
@@ -206,7 +205,9 @@ graph LR
 ## Callout: информация
 
 <Callout type="info" title="Иерархия стандартов">
-**Принципы** (почему) → **Правила** (что) → **Стандарты** (как). Стандарты детализируют правила, но не повторяют принципы. Авторитетный источник стандартов — эта wiki, не Zai-agent-toolkit (сырой, 46 багов).
+  **Принципы** (почему) → **Правила** (что) → **Стандарты** (как). Стандарты
+  детализируют правила, но не повторяют принципы. Авторитетный источник
+  стандартов — эта wiki, не Zai-agent-toolkit (сырой, 46 багов).
 </Callout>
 
 ---
@@ -214,7 +215,10 @@ graph LR
 ## Callout: предупреждение
 
 <Callout type="warning" title="Красные флаги галлюцинации">
-Если в отчёте появляются `.js` файлы в TypeScript проекте, имена вроде `*_service`, `*_controller` без конкретных путей, или красиво оформленный текст с нулём проверяемых фактов — это галлюцинация. Действие: возврат к протоколу.
+  Если в отчёте появляются `.js` файлы в TypeScript проекте, имена вроде
+  `*_service`, `*_controller` без конкретных путей, или красиво оформленный
+  текст с нулём проверяемых фактов — это галлюцинация. Действие: возврат к
+  протоколу.
 </Callout>
 
 ---
@@ -222,7 +226,8 @@ graph LR
 ## Callout: совет
 
 <Callout type="tip" title="Quick check">
-Если нужно быстро понять что активно в экосистеме — смотри статусы [ACTIVE] и [NEW]. Это 11 проектов с реальным кодом и развитием.
+  Если нужно быстро понять что активно в экосистеме — смотри статусы [ACTIVE] и
+  [NEW]. Это 11 проектов с реальным кодом и развитием.
 </Callout>
 
 ---
@@ -230,7 +235,8 @@ graph LR
 ## Callout: опасность
 
 <Callout type="danger" title="Галлюцинированный отчёт">
-Выбросить. Не исправлять. Не дополнять. Исправлять нечего — там нет верных фактов. Правильный анализ начинается с чтения файлов.
+  Выбросить. Не исправлять. Не дополнять. Исправлять нечего — там нет верных
+  фактов. Правильный анализ начинается с чтения файлов.
 </Callout>
 
 ---
@@ -300,19 +306,19 @@ rules:
 
 ## Итого: чеклист верификации
 
-| Элемент | Статус |
-|---------|--------|
-| Заголовки h2, h3, h4 | Проверить визуально |
-| Параграфы, жирный, курсив | Проверить выше |
-| Inline-код (\`...\`) | Проверить выше |
-| Ненумерованные и нумерованные списки | Проверить выше |
-| Таблицы (2+, много колонок) | Проверить выше |
-| Блоки кода (TypeScript, SQL, Bash, plain) | Проверить выше |
-| Mermaid-диаграммы (2 шт) | Проверить выше |
-| Callout (info, warning, tip, danger) | Проверить выше |
-| Badge (4 варианта) | Проверить выше |
-| Блок-цитата | Проверить выше |
-| Изображение | Проверить выше |
-| Внутренние ссылки (Next.js Link) | Проверить кликом |
-| Внешние ссылки (target=_blank) | Проверить кликом |
-| Горизонтальные разделители | Проверить визуально |
+| Элемент                                   | Статус              |
+| ----------------------------------------- | ------------------- |
+| Заголовки h2, h3, h4                      | Проверить визуально |
+| Параграфы, жирный, курсив                 | Проверить выше      |
+| Inline-код (\`...\`)                      | Проверить выше      |
+| Ненумерованные и нумерованные списки      | Проверить выше      |
+| Таблицы (2+, много колонок)               | Проверить выше      |
+| Блоки кода (TypeScript, SQL, Bash, plain) | Проверить выше      |
+| Mermaid-диаграммы (2 шт)                  | Проверить выше      |
+| Callout (info, warning, tip, danger)      | Проверить выше      |
+| Badge (4 варианта)                        | Проверить выше      |
+| Блок-цитата                               | Проверить выше      |
+| Изображение                               | Проверить выше      |
+| Внутренние ссылки (Next.js Link)          | Проверить кликом    |
+| Внешние ссылки (target=\_blank)           | Проверить кликом    |
+| Горизонтальные разделители                | Проверить визуально |

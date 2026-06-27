@@ -29,18 +29,18 @@
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS 4 + shadcn/ui |
-| Theming | next-themes (class-based) |
+| Component         | Technology                                          |
+| ----------------- | --------------------------------------------------- |
+| Framework         | Next.js 16 (App Router)                             |
+| Language          | TypeScript 5                                        |
+| Styling           | Tailwind CSS 4 + shadcn/ui                          |
+| Theming           | next-themes (class-based)                           |
 | Content Rendering | next-mdx-remote/rsc (Server Component) + remark-gfm |
-| Editor | @mdxeditor/editor (WYSIWYG + source) |
-| Code Highlighting | react-syntax-highlighter (Prism) |
-| Diagrams | Mermaid.js (dynamic import) |
-| Frontmatter | gray-matter |
-| Icons | Lucide React |
+| Editor            | @mdxeditor/editor (WYSIWYG + source)                |
+| Code Highlighting | react-syntax-highlighter (Prism)                    |
+| Diagrams          | Mermaid.js (dynamic import)                         |
+| Frontmatter       | gray-matter                                         |
+| Icons             | Lucide React                                        |
 
 ## Local Development
 

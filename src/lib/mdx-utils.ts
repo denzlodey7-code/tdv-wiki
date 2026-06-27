@@ -3,12 +3,12 @@
  * Reads .mdx files from docs/, parses frontmatter,
  * generates navigation structure, and provides content for rendering.
  */
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import GithubSlugger from 'github-slugger';
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import GithubSlugger from "github-slugger";
 
-const CONTENT_DIR = path.join(process.cwd(), 'docs');
+const CONTENT_DIR = path.join(process.cwd(), "docs");
 
 export interface DocMeta {
   title: string;
@@ -20,7 +20,7 @@ export interface DocMeta {
 
 export interface DocPage {
   meta: DocMeta;
-  content: string;  // Raw MDX content (without frontmatter)
+  content: string; // Raw MDX content (without frontmatter)
 }
 
 export interface NavSection {
@@ -39,8 +39,8 @@ export interface Heading {
  * Get all MDX slugs (filenames without extension)
  */
 export function getAllSlugs(): string[] {
-  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.mdx'));
-  return files.map((f) => f.replace(/\.mdx$/, ''));
+  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"));
+  return files.map((f) => f.replace(/\.mdx$/, ""));
 }
 
 /**
@@ -48,14 +48,14 @@ export function getAllSlugs(): string[] {
  */
 export function getDocBySlug(slug: string): DocPage {
   const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
 
   return {
     meta: {
       title: data.title || slug,
-      section: data.section || 'Uncategorized',
-      sectionOrder: data.sectionOrder ?? data['section-order'] ?? 0,
+      section: data.section || "Uncategorized",
+      sectionOrder: data.sectionOrder ?? data["section-order"] ?? 0,
       order: data.order ?? 0,
       slug: data.slug || slug,
     },
@@ -76,14 +76,14 @@ export function getAllDocs(): DocPage[] {
  */
 function extractSnippet(content: string): string {
   return content
-    .replace(/^---[\s\S]*?---/, '')
-    .replace(/#{1,6}\s+.+/g, '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/\*\*(.+?)\*\*/g, '$1')
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
-    .replace(/`(.+?)`/g, '$1')
-    .replace(/^[>\-\*|]\s?/gm, '')
-    .replace(/\n+/g, ' ')
+    .replace(/^---[\s\S]*?---/, "")
+    .replace(/#{1,6}\s+.+/g, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\[(.+?)\]\(.+?\)/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/^[>\-\*|]\s?/gm, "")
+    .replace(/\n+/g, " ")
     .trim()
     .slice(0, 200);
 }
@@ -103,30 +103,38 @@ export function getNavigation(): NavSection[] {
     if (!sectionMap.has(section)) {
       sectionMap.set(section, []);
     }
-    sectionMap.get(section)!.push({ meta: doc.meta, snippet: extractSnippet(doc.content) });
-    if (!sectionOrderMap.has(section) || doc.meta.sectionOrder < sectionOrderMap.get(section)!) {
+    sectionMap
+      .get(section)!
+      .push({ meta: doc.meta, snippet: extractSnippet(doc.content) });
+    if (
+      !sectionOrderMap.has(section) ||
+      doc.meta.sectionOrder < sectionOrderMap.get(section)!
+    ) {
       sectionOrderMap.set(section, doc.meta.sectionOrder);
     }
   }
 
   // Sort sections by their order, then build nav
   const sortedSections = [...sectionMap.entries()].sort(
-    (a, b) => (sectionOrderMap.get(a[0]) ?? 0) - (sectionOrderMap.get(b[0]) ?? 0)
+    (a, b) =>
+      (sectionOrderMap.get(a[0]) ?? 0) - (sectionOrderMap.get(b[0]) ?? 0),
   );
 
-  const navSections: NavSection[] = sortedSections.map(([sectionTitle, items]) => {
-    items.sort((a, b) => a.meta.order - b.meta.order);
-    return {
-      title: sectionTitle,
-      order: sectionOrderMap.get(sectionTitle) ?? 0,
-      items: items.map((item) => ({
-        slug: item.meta.slug,
-        title: item.meta.title,
-        order: item.meta.order,
-        snippet: item.snippet,
-      })),
-    };
-  });
+  const navSections: NavSection[] = sortedSections.map(
+    ([sectionTitle, items]) => {
+      items.sort((a, b) => a.meta.order - b.meta.order);
+      return {
+        title: sectionTitle,
+        order: sectionOrderMap.get(sectionTitle) ?? 0,
+        items: items.map((item) => ({
+          slug: item.meta.slug,
+          title: item.meta.title,
+          order: item.meta.order,
+          snippet: item.snippet,
+        })),
+      };
+    },
+  );
 
   return navSections;
 }
@@ -157,8 +165,20 @@ export function getAdjacentPages(slug: string): {
   const allIds = getAllPageIds();
   const idx = allIds.indexOf(slug);
   return {
-    prev: idx > 0 ? { slug: allIds[idx - 1], title: getDocBySlug(allIds[idx - 1]).meta.title } : undefined,
-    next: idx < allIds.length - 1 ? { slug: allIds[idx + 1], title: getDocBySlug(allIds[idx + 1]).meta.title } : undefined,
+    prev:
+      idx > 0
+        ? {
+            slug: allIds[idx - 1],
+            title: getDocBySlug(allIds[idx - 1]).meta.title,
+          }
+        : undefined,
+    next:
+      idx < allIds.length - 1
+        ? {
+            slug: allIds[idx + 1],
+            title: getDocBySlug(allIds[idx + 1]).meta.title,
+          }
+        : undefined,
   };
 }
 
@@ -168,12 +188,12 @@ export function getAdjacentPages(slug: string): {
 export function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
   const slugger = new GithubSlugger();
-  const lines = content.split('\n');
+  const lines = content.split("\n");
   for (const line of lines) {
     const match = line.match(/^(#{2,3})\s+(.+)/);
     if (match) {
       const level = match[1].length;
-      const text = match[2].replace(/\*\*/g, '').replace(/`/g, '');
+      const text = match[2].replace(/\*\*/g, "").replace(/`/g, "");
       const id = slugger.slug(text);
       headings.push({ id, text, level });
     }
