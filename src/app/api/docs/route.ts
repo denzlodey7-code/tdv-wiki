@@ -8,6 +8,8 @@ import { resolveDocPath } from "@/lib/mdx-utils";
 
 import { bumpVersion } from "@/lib/version";
 
+const CONTENT_DIR = path.join(process.cwd(), "docs");
+
 function buildMdxFile(data: {
   title: string;
   section: string;
