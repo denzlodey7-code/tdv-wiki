@@ -12,7 +12,13 @@ interface PageProps {
 
 // Fully dynamic — no ISR cache, always reads fresh files from disk.
 // This ensures newly created pages are immediately accessible.
-export const dynamic = "force-dynamic";
+// For static export (GitHub Pages), we use generateStaticParams.
+export const dynamic = "force-static";
+
+export async function generateStaticParams() {
+  const { getAllPageIds } = await import("@/lib/mdx-utils");
+  return getAllPageIds().map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,
