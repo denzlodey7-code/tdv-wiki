@@ -84,7 +84,7 @@ export function CodeBlock({
           </span>
         </div>
         <div
-          className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed whitespace-pre"
+          className="overflow-x-auto p-4 font-mono text-[var(--text-sm)] leading-[var(--leading-body)] whitespace-pre"
           style={{ background: "var(--code-bg)", color: "var(--foreground)" }}
         >
           {children.trim()}
@@ -103,7 +103,7 @@ export function CodeBlock({
       margin: 0,
       borderRadius: 0,
       background: codeBg,
-      fontSize: "13px",
+      fontSize: "var(--text-sm)",
       padding: "16px",
       border: "none",
     },
@@ -117,7 +117,7 @@ export function CodeBlock({
     codeTagProps: {
       style: {
         fontFamily:
-          'var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+          'var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
       },
     },
   };

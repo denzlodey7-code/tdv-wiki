@@ -8,12 +8,12 @@ export default function HomePage() {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <p className="text-foreground mb-4 text-[16px]">
+          <p className="text-foreground mb-4 text-[var(--text-lg)]">
             No documentation pages found.
           </p>
           <a
             href="/docs/new/"
-            className="text-[14px] text-[oklch(0.45_0.15_250)] hover:underline"
+            className="text-[var(--text-base)] text-[oklch(0.45_0.15_250)] hover:underline"
           >
             Create the first page
           </a>

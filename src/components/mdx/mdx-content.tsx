@@ -57,7 +57,7 @@ function typographyOverrides() {
     }: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h2
         id={id}
-        className="text-foreground mt-10 mb-4 scroll-mt-20 text-[30px] leading-tight font-medium"
+        className="text-foreground mt-10 mb-4 scroll-mt-20 text-[var(--text-2xl)] leading-[var(--leading-heading)] font-medium"
         {...props}
       >
         {children}
@@ -70,7 +70,7 @@ function typographyOverrides() {
     }: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h3
         id={id}
-        className="text-foreground mt-8 mb-3 scroll-mt-20 text-[20px] leading-snug font-semibold"
+        className="text-foreground mt-8 mb-3 scroll-mt-20 text-[var(--text-xl)] leading-[var(--leading-heading)] font-semibold"
         {...props}
       >
         {children}
@@ -83,14 +83,14 @@ function typographyOverrides() {
     }: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h4
         id={id}
-        className="text-foreground mt-6 mb-2 scroll-mt-20 text-[16px] leading-snug font-semibold"
+        className="text-foreground mt-6 mb-2 scroll-mt-20 text-[var(--text-lg)] leading-[var(--leading-heading)] font-semibold"
         {...props}
       >
         {children}
       </h4>
     ),
     p: ({ children }: React.HTMLAttributes<HTMLParagraphElement>) => (
-      <p className="text-muted-foreground mb-4 text-[16px] leading-relaxed">
+      <p className="text-muted-foreground mb-4 text-[var(--text-lg)] leading-[var(--leading-body)]">
         {children}
       </p>
     ),
@@ -107,7 +107,7 @@ function typographyOverrides() {
       <ol className="mb-4 list-decimal space-y-2 pl-6">{children}</ol>
     ),
     li: ({ children }: React.HTMLAttributes<HTMLLIElement>) => (
-      <li className="text-muted-foreground text-[16px] leading-relaxed">
+      <li className="text-muted-foreground text-[var(--text-lg)] leading-[var(--leading-body)]">
         {children}
       </li>
     ),
@@ -121,7 +121,7 @@ function tableOverrides() {
   return {
     table: ({ children }: React.HTMLAttributes<HTMLTableElement>) => (
       <div className="border-border my-4 overflow-x-auto rounded-lg border">
-        <table className="w-full text-sm">{children}</table>
+        <table className="w-full text-[var(--text-base)]">{children}</table>
       </div>
     ),
     thead: ({ children }: React.HTMLAttributes<HTMLTableSectionElement>) => (
@@ -230,7 +230,7 @@ function buildMdxComponents(validSlugs: string[]) {
     ...codeOverrides(),
     ...linkOverrides(validSlugs),
     blockquote: ({ children }: React.HTMLAttributes<HTMLQuoteElement>) => (
-      <blockquote className="border-border text-muted-foreground [&_strong]:text-foreground [&_em]:text-foreground/80 [&_code]:bg-muted my-4 border-l-2 pl-4 not-italic [&_a]:text-[oklch(0.45_0.15_250)] dark:[&_a]:text-[oklch(0.685_0.169_237.323)] [&_a:hover]:underline [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[13px] [&_em]:italic [&_p]:mb-1 [&_p]:text-[14px] [&_p]:leading-relaxed [&_p:last-child]:mb-0 [&_strong]:font-medium">
+      <blockquote className="border-border text-muted-foreground [&_strong]:text-foreground [&_em]:text-foreground/80 [&_code]:bg-muted my-4 border-l-2 pl-4 not-italic [&_a]:text-[oklch(0.45_0.15_250)] dark:[&_a]:text-[oklch(0.685_0.169_237.323)] [&_a:hover]:underline [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[var(--text-sm)] [&_em]:italic [&_p]:mb-1 [&_p]:text-[var(--text-base)] [&_p]:leading-[var(--leading-body)] [&_p:last-child]:mb-0 [&_strong]:font-medium">
         {children}
       </blockquote>
     ),

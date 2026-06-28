@@ -52,7 +52,7 @@ export function Callout({
       {title && (
         <div className="text-foreground mb-1 font-semibold">{title}</div>
       )}
-      <div className="text-muted-foreground text-[15px] leading-relaxed">
+      <div className="text-muted-foreground text-[var(--text-md)] leading-[var(--leading-body)]">
         {children}
       </div>
     </div>

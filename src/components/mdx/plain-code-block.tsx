@@ -91,7 +91,7 @@ export function PlainCodeBlock({ children }: { children: string }) {
           </div>
         </div>
         <div
-          className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed whitespace-pre"
+          className="overflow-x-auto p-4 font-mono text-[var(--text-sm)] leading-[var(--leading-body)] whitespace-pre"
           style={{ background: "var(--code-bg)", color: "var(--foreground)" }}
         >
           {children.trim()}
@@ -121,7 +121,7 @@ export function PlainCodeBlock({ children }: { children: string }) {
         {copyButton}
       </div>
       <div
-        className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed whitespace-pre"
+        className="overflow-x-auto p-4 font-mono text-[var(--text-sm)] leading-[var(--leading-body)] whitespace-pre"
         style={{
           background: codeBg,
           color: isDark ? "#e5e5e5" : "#333",

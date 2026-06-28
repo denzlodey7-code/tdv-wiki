@@ -149,15 +149,19 @@
   --fib-6: 6.5rem; /* 104px */
   --fib-7: 10.5rem; /* 168px */
 
-  /* Type scale (px-based, aligned with Fibonacci spacing) */
-  --text-xs: 12px;
-  --text-sm: 13px;
-  --text-base: 14px;
-  --text-md: 15px;
-  --text-lg: 16px;
-  --text-xl: 20px;
-  --text-2xl: 30px;
-  --text-3xl: 32px;
+  /* Type scale (rem-based — single source of truth for all text sizes) */
+  --text-xs: 0.75rem;      /* 12px — tiny labels, badges, kbd */
+  --text-sm: 0.8125rem;    /* 13px — sidebar nav, TOC, small UI, code blocks */
+  --text-base: 0.875rem;   /* 14px — secondary body, tables, blockquotes */
+  --text-md: 0.9375rem;    /* 15px — UI inputs, callouts, dialog body */
+  --text-lg: 1rem;         /* 16px — primary body text, lists, h4 */
+  --text-xl: 1.25rem;      /* 20px — h3 headings */
+  --text-2xl: 1.875rem;    /* 30px — h2 section headings */
+  --text-3xl: 2rem;        /* 32px — page titles */
+
+  /* Line-height tokens */
+  --leading-heading: 1.2;  /* tight — headings */
+  --leading-body: 1.6;     /* relaxed — body text, lists, blockquotes */
 
   /* Grid gap tokens */
   --zai-gap-xs: 0.75rem; /* 12px — tight, inside cards */
@@ -444,7 +448,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-size: var(--text-lg);
+    line-height: var(--leading-body);
+  }
+  /* Ensure all code elements in docs use consistent monospace font */
+  .docs-content code,
+  .docs-content pre,
+  .docs-content [class*="codeBlock"],
+  .docs-content [class*="pre"],
+  .docs-content kbd {
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
   /* Prevent global border-color from leaking into syntax highlighter.
      react-syntax-highlighter renders each line as a separate DOM element,

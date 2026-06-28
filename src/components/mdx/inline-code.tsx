@@ -8,7 +8,7 @@ import React from "react";
  */
 export function InlineCode({ children }: { children: React.ReactNode }) {
   return (
-    <code className="bg-muted text-foreground/90 rounded px-1.5 py-0.5 font-mono text-sm">
+    <code className="bg-muted text-foreground/90 rounded px-1.5 py-0.5 font-mono text-[var(--text-sm)]">
       {children}
     </code>
   );
