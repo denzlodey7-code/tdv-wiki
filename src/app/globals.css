@@ -281,6 +281,10 @@
   .docs-golden-grid {
     grid-template-columns: 280px minmax(0, 1.618fr) 300px;
   }
+
+  .docs-golden-grid.docs-sidebar-hidden {
+    grid-template-columns: minmax(0, 1.618fr) 300px;
+  }
 }
 
 /* ===== RESPONSIVE VISIBILITY — Tailwind v4/Turbopack workaround ===== */
@@ -366,6 +370,16 @@
 @media (min-width: 768px) {
   .docs-show-md-inline-flex {
     display: inline-flex;
+  }
+}
+
+.docs-show-xl {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .docs-show-xl {
+    display: block;
   }
 }
 

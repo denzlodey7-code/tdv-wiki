@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { SearchButton } from "./search-dialog";
 import ThemeToggle from "./theme-toggle";
-import { Menu, X, ExternalLink, Plus } from "lucide-react";
+import { Menu, X, ExternalLink, Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 interface HeaderProps {
   onSearchOpen: () => void;
@@ -15,6 +15,8 @@ interface HeaderProps {
   tabs: { title: string; firstSlug: string }[];
   canEdit?: boolean;
   version?: string;
+  sidebarVisible?: boolean;
+  onToggleSidebar?: () => void;
 }
 
 export default function Header({
@@ -26,6 +28,8 @@ export default function Header({
   tabs,
   canEdit = true,
   version,
+  sidebarVisible = true,
+  onToggleSidebar,
 }: HeaderProps) {
   const activeTabStyle =
     "px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full whitespace-nowrap";
@@ -48,6 +52,20 @@ export default function Header({
               <Menu className="text-muted-foreground h-5 w-5" />
             )}
           </button>
+          {onToggleSidebar && (
+            <button
+              onClick={onToggleSidebar}
+              className="docs-show-xl hover:bg-muted rounded-md p-1.5 transition-colors"
+              aria-label={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
+              title={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
+            >
+              {sidebarVisible ? (
+                <PanelLeftClose className="text-muted-foreground h-4 w-4" />
+              ) : (
+                <PanelLeftOpen className="text-muted-foreground h-4 w-4" />
+              )}
+            </button>
+          )}
 
           <Link href="/docs/" className="flex items-center gap-2">
             <svg

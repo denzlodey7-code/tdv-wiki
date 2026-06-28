@@ -7,7 +7,7 @@ import Header from "@/components/docs/header";
 import Sidebar from "@/components/docs/sidebar";
 import TOC from "@/components/docs/toc";
 import SearchDialog from "@/components/docs/search-dialog";
-import { ChevronLeft, ChevronRight, ArrowUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUp, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import type { NavSection, Heading } from "@/lib/mdx-utils";
 
 interface AdjacentPages {
@@ -64,6 +64,7 @@ export default function DocsShell({
   const router = useRouter();
   const [activeHeading, setActiveHeading] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const { searchOpen, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } =
     useDocsShellUI();
@@ -127,9 +128,11 @@ export default function DocsShell({
         tabs={tabs}
         canEdit={canEdit}
         version={version}
+        sidebarVisible={sidebarVisible}
+        onToggleSidebar={() => setSidebarVisible((v) => !v)}
       />
 
-      <div className="docs-golden-grid">
+      <div className={`docs-golden-grid${sidebarVisible ? "" : " docs-sidebar-hidden"}`}>
         <Sidebar
           currentSlug={slug}
           navigation={filteredNav}
@@ -137,6 +140,7 @@ export default function DocsShell({
           isOpen={mobileMenuOpen}
           onClose={() => setMobileMenuOpen(false)}
           canEdit={canEdit}
+          visible={sidebarVisible}
         />
 
         <main className="flex min-w-0 flex-col">

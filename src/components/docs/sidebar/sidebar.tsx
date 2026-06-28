@@ -16,6 +16,7 @@ interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   canEdit?: boolean;
+  visible?: boolean;
 }
 
 export default function Sidebar({
@@ -25,6 +26,7 @@ export default function Sidebar({
   isOpen,
   onClose,
   canEdit = true,
+  visible = true,
 }: SidebarProps) {
   const findActiveSection = (slug: string) => {
     if (!navigation?.length) return "";
@@ -174,7 +176,7 @@ export default function Sidebar({
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="docs-desktop-sidebar border-border bg-sidebar sticky top-[49px] h-[calc(100vh-49px)] shrink-0 border-r">
+      <aside className={`docs-desktop-sidebar border-border bg-sidebar sticky top-[49px] h-[calc(100vh-49px)] shrink-0 border-r${visible ? "" : " !hidden"}`}>
         {sidebarContent}
       </aside>
 
