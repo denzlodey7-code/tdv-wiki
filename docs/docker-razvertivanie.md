@@ -464,7 +464,7 @@ docker run -d \
 ENTRYPOINT контейнера -- `/init` (s6-overlay). При загрузке:
 
 1. Запускает `/etc/cont-init.d/01-hermes-setup` от root: опциональный ремап UID/GID, исправление владельца volume, seed `.env` / `config.yaml` / `SOUL.md` при первом запуске, миграции схемы конфигурации (если `HERMES_SKIP_CONFIG_MIGRATION=1` не установлен), синхронизация встроенных навыков.
-2. Запускает `/etc/cont-init.d/02-reconcile-profiles`: обходит `$HERMES_HOME/profiles/<name>/`, пересоздает слот gateway-<profile> под `/run/service/gateway-<profile>/` и автозапускает только те, чье последнее состояние было `running`.
+2. Запускает `/etc/cont-init.d/02-reconcile-profiles`: обходит `$HERMES_HOME/profiles/<name>/`, пересоздает слот `gateway-<profile>` под `/run/service/gateway-<profile>/` и автозапускает только те, чье последнее состояние было `running`.
 3. Запускает статические сервисы `main-hermes` и `dashboard`.
 4. Выполняет CMD контейнера как главную программу (`/opt/hermes/docker/main-wrapper.sh`):
    - Без аргументов -> `hermes` (по умолчанию)

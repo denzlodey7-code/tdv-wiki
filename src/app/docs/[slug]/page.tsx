@@ -21,11 +21,11 @@ export async function generateMetadata({
   try {
     const doc = getDocBySlug(slug);
     return {
-      title: `${doc.meta.title} — StsDev Wiki`,
+      title: `${doc.meta.title} — TDV`,
       description: `Documentation: ${doc.meta.title} (${doc.meta.section})`,
     };
   } catch {
-    return { title: "StsDev Wiki" };
+    return { title: "TDV" };
   }
 }
 

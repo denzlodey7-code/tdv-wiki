@@ -138,7 +138,7 @@ export default function Header({
               />
             </svg>
             <span className="text-foreground font-semibold text-[var(--text-md)]">
-              StsDev Wiki
+              TDV
             </span>
           </Link>
         </div>
@@ -223,7 +223,7 @@ export default function Header({
           <SearchButton onClick={onSearchOpen} />
 
           <a
-            href="https://github.com/stsgs1980/StsDev-Wiki-Template"
+            href="https://github.com/stsgs1980/TDV"
             target="_blank"
             rel="noopener noreferrer"
             className="docs-show-sm-flex bg-foreground text-background hover:bg-foreground/90 items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium text-[var(--text-sm)] transition-colors"

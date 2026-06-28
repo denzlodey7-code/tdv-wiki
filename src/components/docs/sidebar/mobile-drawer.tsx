@@ -53,7 +53,7 @@ export default function MobileDrawer({
             />
           </svg>
           <span className="text-foreground text-sm font-medium">
-            StsDev Wiki
+            TDV
           </span>
         </div>
         {children}

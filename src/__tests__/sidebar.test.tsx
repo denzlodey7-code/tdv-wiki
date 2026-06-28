@@ -177,8 +177,8 @@ describe("Sidebar — mobile drawer", () => {
     const mobileDrawers = container.querySelectorAll("aside.fixed");
     expect(mobileDrawers.length).toBeGreaterThanOrEqual(1);
 
-    // Should show "StsDev Wiki" text in mobile header
-    expect(screen.getByText("StsDev Wiki")).toBeInTheDocument();
+    // Should show "TDV" text in mobile header
+        expect(screen.getByText("TDV")).toBeInTheDocument();
   });
 
   it("вызывает onClose при клике на оверлей", async () => {

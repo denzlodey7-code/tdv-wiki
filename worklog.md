@@ -1,4 +1,4 @@
-# Worklog — StsDev-Wiki
+# Worklog — TDV
 
 ---
 
@@ -26,7 +26,7 @@ Work Log:
 - Installed `@stsgs1980/fab-inspector@3.6.6` as devDependency
 - Ran `npx @stsgs1980/fab-inspector init` — wired SelectElementFab into layout.tsx, created API route
 - Installed missing peer dep `framer-motion@12.42.0`
-- Force-pushed to remote (token from upload/StsDev-Wiki-Template.txt, remote had been force-pushed previously)
+- Force-pushed to remote (token from upload/TDV.txt, remote had been force-pushed previously)
 
 Stage Summary:
 
@@ -54,8 +54,8 @@ Work Log:
 - All 131 tests passing, 0 failures
 - Installed `@stsgs1980/fab-inspector` in dependencies (was devDeps, needed at runtime)
 - Added `packageManager: bun@1.3.14` to package.json for Vercel
-- ROOT CAUSE: Vercel was connected to `StsDev-Wiki-Template` repo, we were pushing to `StsDev-Wiki` — fixes never reached Vercel
-- Force-pushed to `StsDev-Wiki-Template` — Vercel should now deploy successfully
+- ROOT CAUSE: Vercel was connected to `TDV` repo, we were pushing to `TDV` — fixes never reached Vercel
+- Force-pushed to `TDV` — Vercel should now deploy successfully
 - Build passes locally: 0 errors, 0 TypeScript errors
 - Remaining warnings (non-blocking): middleware deprecated → proxy, vercel transitive dep
 
@@ -64,7 +64,7 @@ Stage Summary:
 - docs/ at project root — non-technical users can find content
 - 3 new test files, 47 new tests — full coverage of content layer
 - 4 API route files + 3 test files had hardcoded `src/content/docs` — all fixed
-- Vercel root cause found: wrong repo. Pushed to correct repo (StsDev-Wiki-Template)
+- Vercel root cause found: wrong repo. Pushed to correct repo (TDV)
 - `packageManager` added so Vercel uses bun + bun.lock
 - Build: clean (0 errors)
 - Tests: 131 passed, 0 failed

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "StsDev Wiki Template",
+  title: "TDV",
   description: "Wiki documentation template built on Next.js 16 with MDX, syntax highlighting, themes, and in-app editing",
   keywords: ["wiki", "documentation", "Next.js", "MDX", "Docs-as-Code", "template"],
 };
