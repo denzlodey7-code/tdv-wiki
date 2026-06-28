@@ -6,13 +6,13 @@ import { SearchButton } from "./search-dialog";
 import ThemeToggle from "./theme-toggle";
 import { Menu, X, ExternalLink, Plus } from "lucide-react";
 
-const WIKI_INDEX_SLUG = "o-sts-wiki-index";
-
 interface HeaderProps {
   onSearchOpen: () => void;
   onMobileMenuToggle: () => void;
   isMobileMenuOpen: boolean;
   currentSlug?: string;
+  currentSection?: string;
+  tabs: { title: string; firstSlug: string }[];
   canEdit?: boolean;
   version?: string;
 }
@@ -22,19 +22,21 @@ export default function Header({
   onMobileMenuToggle,
   isMobileMenuOpen,
   currentSlug,
+  currentSection,
+  tabs,
   canEdit = true,
   version,
 }: HeaderProps) {
-  const isWikiIndex = currentSlug === WIKI_INDEX_SLUG;
   const activeTabStyle =
-    "px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full";
+    "px-3 py-1 text-[14px] font-medium text-foreground bg-muted rounded-full whitespace-nowrap";
   const inactiveTabStyle =
-    "px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors";
+    "px-3 py-1 text-[14px] font-medium text-muted-foreground hover:text-foreground bg-transparent rounded-full hover:bg-muted transition-colors whitespace-nowrap";
+
   return (
     <header className="border-border bg-background sticky top-0 z-30 flex h-[49px] items-center border-b">
-      <div className="flex w-full items-center px-4">
-        {/* Left: Logo + Nav */}
-        <div className="flex items-center gap-4">
+      <div className="flex w-full items-center gap-4 px-4">
+        {/* Left: Hamburger + Logo */}
+        <div className="flex shrink-0 items-center gap-3">
           <button
             onClick={onMobileMenuToggle}
             className="hover:bg-muted -ml-1.5 rounded-md p-1.5 transition-colors xl:hidden"
@@ -81,26 +83,26 @@ export default function Header({
               StsDev Wiki
             </span>
           </Link>
-
-          <nav className="docs-show-md-flex ml-4 items-center gap-1">
-            <Link
-              href={`/docs/${WIKI_INDEX_SLUG}/`}
-              className={isWikiIndex ? activeTabStyle : inactiveTabStyle}
-            >
-              О Sts Wiki
-            </Link>
-            <Link
-              href="/docs/"
-              className={!isWikiIndex ? activeTabStyle : inactiveTabStyle}
-            >
-              Docs
-            </Link>
-          </nav>
         </div>
 
-        {/* Right: Actions + Theme + Search */}
-        <div className="ml-auto flex items-center gap-2">
-          {/* Create new page — only in server mode */}
+        {/* Tabs — scrollable on overflow */}
+        <nav className="docs-show-md-flex ml-2 flex items-center gap-1 overflow-x-auto scrollbar-none">
+          {tabs.map((tab) => {
+            const isActive = currentSection === tab.title;
+            return (
+              <Link
+                key={tab.title}
+                href={`/docs/${tab.firstSlug}/`}
+                className={isActive ? activeTabStyle : inactiveTabStyle}
+              >
+                {tab.title}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {canEdit && (
             <Link
               href="/docs/new/"
@@ -112,7 +114,6 @@ export default function Header({
             </Link>
           )}
 
-          {/* Edit current page — only in server mode */}
           {canEdit && currentSlug && (
             <Link
               href={`/docs/${currentSlug}/edit/`}

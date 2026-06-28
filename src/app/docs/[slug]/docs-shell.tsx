@@ -10,8 +10,6 @@ import SearchDialog from "@/components/docs/search-dialog";
 import { ChevronLeft, ChevronRight, ArrowUp } from "lucide-react";
 import type { NavSection, Heading } from "@/lib/mdx-utils";
 
-const WIKI_SECTION = "О Sts Wiki";
-
 interface AdjacentPages {
   prev?: { slug: string; title: string };
   next?: { slug: string; title: string };
@@ -29,9 +27,6 @@ interface DocsShellProps {
   version?: string;
 }
 
-/**
- * Hook encapsulating search dialog and mobile menu state + Cmd+K shortcut.
- */
 function useDocsShellUI() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -81,7 +76,6 @@ export default function DocsShell({
     [router, setMobileMenuOpen],
   );
 
-  // Track active heading on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -107,15 +101,15 @@ export default function DocsShell({
     };
   }, [headings]);
 
-  const isWikiTab = section === WIKI_SECTION;
+  // Build tabs from navigation (1 tab per section)
+  const tabs = navigation.map((s) => ({
+    title: s.title,
+    firstSlug: s.items[0]?.slug ?? "",
+  }));
 
-  // Filter navigation: wiki tab shows only "О Sts Wiki" section,
-  // docs tab shows everything except "О Sts Wiki"
-  const filteredNav = isWikiTab
-    ? navigation.filter((s) => s.title === WIKI_SECTION)
-    : navigation.filter((s) => s.title !== WIKI_SECTION);
+  // Sidebar: only current section
+  const filteredNav = navigation.filter((s) => s.title === section);
 
-  // Scroll-to-top visibility
   useEffect(() => {
     const handleScroll = () => setShowScrollTop(window.scrollY > 400);
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -129,16 +123,13 @@ export default function DocsShell({
         onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
         isMobileMenuOpen={mobileMenuOpen}
         currentSlug={slug}
+        currentSection={section}
+        tabs={tabs}
         canEdit={canEdit}
         version={version}
       />
 
-      {/* Golden Split Grid — phi-layout: 1fr 1.618fr proportions
-          Desktop (xl+): sidebar(280px) + content(1.618fr) + TOC(220px)
-          Tablet: content(1.618fr) + TOC(1fr)
-          Mobile: single column */}
       <div className="docs-golden-grid">
-        {/* Sidebar — grid column 1 on xl+ */}
         <Sidebar
           currentSlug={slug}
           navigation={filteredNav}
@@ -148,14 +139,12 @@ export default function DocsShell({
           canEdit={canEdit}
         />
 
-        {/* Content — golden section (1.618fr) */}
         <main className="flex min-w-0 flex-col">
           <div
             ref={contentRef}
             className="px-6 py-8 xl:px-10 xl:py-12"
             style={{ gap: "var(--fib-3)" }}
           >
-            {/* Breadcrumb */}
             <div className="text-foreground/60 mb-6 flex items-center gap-2 text-[var(--text-sm)]">
               <Link
                 href="/docs/"
@@ -167,16 +156,13 @@ export default function DocsShell({
               <span>{section}</span>
             </div>
 
-            {/* Page Title */}
             <h1 className="text-foreground mb-4 leading-tight font-medium text-[var(--text-3xl)]">
               {title}
             </h1>
 
-            {/* MDX Content — pre-rendered on server */}
             {renderedContent}
           </div>
 
-          {/* Navigation — full width of main, pushed to bottom via mt-auto */}
           <div className="border-border mt-auto border-t px-6 py-6 xl:px-10">
             <div className="grid grid-cols-2 gap-4">
               {adjacent.prev ? (
@@ -219,7 +205,6 @@ export default function DocsShell({
           </div>
         </main>
 
-        {/* TOC — grid column 3 on xl+ */}
         <TOC headings={headings} activeId={activeHeading} />
       </div>
 
@@ -230,7 +215,6 @@ export default function DocsShell({
         navigation={filteredNav}
       />
 
-      {/* Scroll to top */}
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

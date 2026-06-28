@@ -44,27 +44,21 @@ export default async function DocPage({ params }: PageProps) {
   const section = doc.meta.section;
   const canEdit = process.env.CAN_EDIT !== "false";
 
-  // Get adjacent pages filtered to the current section context
-  const WIKI_SECTION = "О Sts Wiki";
-  const contextNav =
-    section === WIKI_SECTION
-      ? navigation.filter((s) => s.title === WIKI_SECTION)
-      : navigation.filter((s) => s.title !== WIKI_SECTION);
-  const contextSlugs = contextNav.flatMap((s) => s.items.map((i) => i.slug));
-  const contextIdx = contextSlugs.indexOf(slug);
+  // Adjacent pages: navigate between sections (1 file = 1 tab)
+  const sectionIdx = navigation.findIndex((s) => s.title === section);
   const adjacent = {
     prev:
-      contextIdx > 0
+      sectionIdx > 0
         ? {
-            slug: contextSlugs[contextIdx - 1],
-            title: getDocBySlug(contextSlugs[contextIdx - 1]).meta.title,
+            slug: navigation[sectionIdx - 1].items[0].slug,
+            title: navigation[sectionIdx - 1].title,
           }
         : undefined,
     next:
-      contextIdx < contextSlugs.length - 1
+      sectionIdx < navigation.length - 1 && navigation[sectionIdx + 1].items.length > 0
         ? {
-            slug: contextSlugs[contextIdx + 1],
-            title: getDocBySlug(contextSlugs[contextIdx + 1]).meta.title,
+            slug: navigation[sectionIdx + 1].items[0].slug,
+            title: navigation[sectionIdx + 1].title,
           }
         : undefined,
   };
