@@ -194,8 +194,10 @@ describe("SearchDialog", () => {
     act(() => rerender(<SearchDialog {...defaultProps} open={false} />));
 
     // Ждём сброса состояния и открываем снова
-    await new Promise((r) => setTimeout(r, 200));
-    act(() => rerender(<SearchDialog {...defaultProps} open={true} />));
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+      rerender(<SearchDialog {...defaultProps} open={true} />);
+    });
 
     const newInput = screen.getByPlaceholderText(
       "Search documentation...",
